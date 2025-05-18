@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Portal - User Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #ecf0f3, #ffffff);
+      padding: 40px 20px;
+    }
+
+    header {
+      background: linear-gradient(to right, #2c3e50, #34495e);
+      color: #ecf0f1;
+      text-align: center;
+      padding: 30px 20px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 32px;
+      font-weight: 600;
+    }
+
+    header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .container {
+      background-color: #ffffff;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      background-color: #f9f9f9;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+      border-color: #3498db;
+      outline: none;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+      background-color: #fff;
+    }
+
+    .btn {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #2980b9;
+    }
+
+    .btn-cancel {
+      background-color: #e74c3c;
+    }
+
+    .btn-cancel:hover {
+      background-color: #c0392b;
+    }
+
+    .user-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .user-table th, .user-table td {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .user-table thead {
+      background-color: #f0f4f8;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    .user-table tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      background-color: white;
+    }
+
+    .user-table tbody tr:hover {
+      background-color: #f7fbff;
+    }
+
+    @media(max-width: 768px) {
+      .form-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Admin Portal</h1>
+    <p>User Management Dashboard</p>
+  </header>
+
+  <div class="container">
+    <h2>Manage Users</h2>
+
+    <!-- User Form -->
+    <form id="addUserForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="userName">Full Name</label>
+          <input type="text" id="userName" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="userEmail">Email</label>
+          <input type="email" id="userEmail" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="userRole">Role</label>
+          <select id="userRole" class="form-control">
+            <option value="Student">Student</option>
+            <option value="Faculty">Faculty</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn">Add User</button>
+    </form>
+
+    <!-- User Table -->
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <!-- Users will appear here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const addUserForm = document.getElementById('addUserForm');
+    const userTableBody = document.getElementById('userTableBody');
+    let users = [];
+
+    addUserForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('userName').value.trim();
+      const email = document.getElementById('userEmail').value.trim();
+      const role = document.getElementById('userRole').value;
+
+      if (name && email) {
+        users.push({ name, email, role });
+        renderUsers();
+        addUserForm.reset();
+      }
+    });
+
+    function renderUsers() {
+      userTableBody.innerHTML = '';
+      users.forEach((user, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td>
+            <button class="btn btn-cancel" onclick="deleteUser(${index})">Delete</button>
+          </td>
+        `;
+        userTableBody.appendChild(row);
+      });
+    }
+
+    function deleteUser(index) {
+      users.splice(index, 1);
+      renderUsers();
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faculty Attendance System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fc;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .faculty-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .faculty-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #3498db;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-right: 15px;
+    }
+
+    .datetime {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #555;
+      font-size: 16px;
+      background-color: #e8f4f8;
+      padding: 8px;
+      border-radius: 4px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .course-selector {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .course-selector select {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      width: 300px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .controls button {
+      margin: 5px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .controls button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .mark-all-present {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    .mark-all-absent {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .mark-all-late {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .reset-all {
+      background-color: #7f8c8d;
+      color: white;
+    }
+
+    .post-btn {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .profiles-container {
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 15px;
+      border: 1px solid #ecf0f1;
+      border-radius: 8px;
+      background-color: #f9fafb;
+      transition: all 0.2s ease;
+    }
+
+    .profile:hover {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background-color: #ffffff;
+    }
+
+    .profile img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-right: 15px;
+      object-fit: cover;
+      border: 2px solid #ddd;
+    }
+
+    .profile-info {
+      flex-grow: 1;
+    }
+
+    .profile-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .profile-id {
+      color: #7f8c8d;
+      font-size: 14px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .buttons button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .buttons button:hover {
+      transform: scale(1.05);
+    }
+
+    .present-btn {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    .absent-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .late-btn {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .status {
+      font-weight: bold;
+      margin-left: 15px;
+      min-width: 100px;
+      text-align: center;
+      padding: 5px 10px;
+      border-radius: 15px;
+    }
+
+    .status-present {
+      background-color: #d5f5e3;
+      color: #27ae60;
+    }
+
+    .status-absent {
+      background-color: #fadbd8;
+      color: #c0392b;
+    }
+
+    .status-late {
+      background-color: #fef9e7;
+      color: #d35400;
+    }
+
+    .status-not-marked {
+      background-color: #f2f3f4;
+      color: #7f8c8d;
+    }
+
+    .notes-input {
+      display: none;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .notes-input textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .show-notes-btn {
+      background-color: #95a5a6;
+      color: white;
+      margin-left: 10px;
+    }
+
+    .summary {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+    }
+
+    .summary h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    .summary-stats {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 10px;
+      min-width: 100px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .present-stat .stat-value {
+      color: #27ae60;
+    }
+
+    .absent-stat .stat-value {
+      color: #c0392b;
+    }
+
+    .late-stat .stat-value {
+      color: #d35400;
+    }
+
+    @media (max-width: 768px) {
+      .profile {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .profile img {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+      
+      .buttons {
+        margin-top: 10px;
+        justify-content: center;
+      }
+      
+      .status {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="faculty-info">
+        <div class="faculty-avatar">P</div>
+        <div>
+          <h3 style="margin:0;">Prof. Johnson</h3>
+          <div style="color:#7f8c8d;">Computer Science Department</div>
+        </div>
+      </div>
+      <h1>Faculty Attendance System</h1>
+      <div style="width:120px;"></div>
+    </div>
+    
+    <div class="datetime" id="datetime"></div>
+    
+    <div class="course-selector">
+      <select id="course-select" onchange="loadStudents()">
+        <option value="cs101">CS101 - Introduction to Programming</option>
+        <option value="cs202">CS202 - Data Structures</option>
+        <option value="cs303">CS303 - Database Systems</option>
+        <option value="cs404">CS404 - Machine Learning</option>
+      </select>
+    </div>
+
+    <div class="controls">
+      <button class="mark-all-present" onclick="markAll('Present')">Mark All Present</button>
+      <button class="mark-all-absent" onclick="markAll('Absent')">Mark All Absent</button>
+      <button class="mark-all-late" onclick="markAll('Late')">Mark All Late</button>
+      <button class="reset-all" onclick="resetAll()">Reset</button>
+      <button class="post-btn" onclick="postAttendance()">Post Attendance</button>
+    </div>
+    
+    <div class="profiles-container" id="profiles">
+      <!-- Profiles will be inserted here -->
+    </div>
+    
+    <div class="summary" id="attendance-summary">
+      <h3>Attendance Summary</h3>
+      <div class="summary-stats">
+        <div class="stat-item present-stat">
+          <div class="stat-value" id="present-count">0</div>
+          <div class="stat-label">Present</div>
+        </div>
+        <div class="stat-item absent-stat">
+          <div class="stat-value" id="absent-count">0</div>
+          <div class="stat-label">Absent</div>
+        </div>
+        <div class="stat-item late-stat">
+          <div class="stat-value" id="late-count">0</div>
+          <div class="stat-label">Late</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="total-count">0</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="attendance-percentage">0%</div>
+          <div class="stat-label">Attendance Rate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Course data with students
+    const courseData = {
+      "cs101": [
+      { name: "alice01", image: "https://randomuser.me/api/portraits/women/1.jpg" },
+      { name: "bob02", image: "https://randomuser.me/api/portraits/men/2.jpg" },
+      { name: "charlie03", image: "https://randomuser.me/api/portraits/men/3.jpg" },
+      { name: "david04", image: "https://randomuser.me/api/portraits/men/4.jpg" },
+      { name: "eve05", image: "https://randomuser.me/api/portraits/women/5.jpg" },
+      { name: "frank06", image: "https://randomuser.me/api/portraits/men/6.jpg" },
+      { name: "grace07", image: "https://randomuser.me/api/portraits/women/7.jpg" },
+      { name: "henry08", image: "https://randomuser.me/api/portraits/men/8.jpg" },
+      { name: "irene09", image: "https://randomuser.me/api/portraits/women/9.jpg" },
+      { name: "jack10", image: "https://randomuser.me/api/portraits/men/10.jpg" }
+      ],
+      "cs202": [
+      { name: "alice01", image: "https://randomuser.me/api/portraits/women/1.jpg" },
+      { name: "bob02", image: "https://randomuser.me/api/portraits/men/2.jpg" },
+      { name: "charlie03", image: "https://randomuser.me/api/portraits/men/3.jpg" },
+      { name: "david04", image: "https://randomuser.me/api/portraits/men/4.jpg" },
+      { name: "eve05", image: "https://randomuser.me/api/portraits/women/5.jpg" },
+      { name: "frank06", image: "https://randomuser.me/api/portraits/men/6.jpg" },
+      { name: "grace07", image: "https://randomuser.me/api/portraits/women/7.jpg" },
+      { name: "henry08", image: "https://randomuser.me/api/portraits/men/8.jpg" },
+      { name: "irene09", image: "https://randomuser.me/api/portraits/women/9.jpg" },
+      { name: "jack10", image: "https://randomuser.me/api/portraits/men/10.jpg" }
+      ],
+      "cs303": [
+      { name: "alice01", image: "https://randomuser.me/api/portraits/women/1.jpg" },
+      { name: "bob02", image: "https://randomuser.me/api/portraits/men/2.jpg" },
+      { name: "charlie03", image: "https://randomuser.me/api/portraits/men/3.jpg" },
+      { name: "david04", image: "https://randomuser.me/api/portraits/men/4.jpg" },
+      { name: "eve05", image: "https://randomuser.me/api/portraits/women/5.jpg" },
+      { name: "frank06", image: "https://randomuser.me/api/portraits/men/6.jpg" },
+      { name: "grace07", image: "https://randomuser.me/api/portraits/women/7.jpg" },
+      { name: "henry08", image: "https://randomuser.me/api/portraits/men/8.jpg" },
+      { name: "irene09", image: "https://randomuser.me/api/portraits/women/9.jpg" },
+      { name: "jack10", image: "https://randomuser.me/api/portraits/men/10.jpg" }
+      ],
+      "cs404": [
+      { name: "alice01", image: "https://randomuser.me/api/portraits/women/1.jpg" },
+      { name: "bob02", image: "https://randomuser.me/api/portraits/men/2.jpg" },
+      { name: "charlie03", image: "https://randomuser.me/api/portraits/men/3.jpg" },
+      { name: "david04", image: "https://randomuser.me/api/portraits/men/4.jpg" },
+      { name: "eve05", image: "https://randomuser.me/api/portraits/women/5.jpg" },
+      { name: "frank06", image: "https://randomuser.me/api/portraits/men/6.jpg" },
+      { name: "grace07", image: "https://randomuser.me/api/portraits/women/7.jpg" },
+      { name: "henry08", image: "https://randomuser.me/api/portraits/men/8.jpg" },
+      { name: "irene09", image: "https://randomuser.me/api/portraits/women/9.jpg" },
+      { name: "jack10", image: "https://randomuser.me/api/portraits/men/10.jpg" }
+      ]
+    };
+
+    let currentStudents = [];
+    const profileContainer = document.getElementById("profiles");
+
+    function loadStudents() {
+      const courseId = document.getElementById("course-select").value;
+      currentStudents = courseData[courseId];
+      renderProfiles();
+      updateSummary();
+    }
+
+    function renderProfiles() {
+      profileContainer.innerHTML = "";
+      
+      currentStudents.forEach((student, index) => {
+        const profileDiv = document.createElement("div");
+        profileDiv.className = "profile";
+
+        profileDiv.innerHTML = `
+          <img src="${student.image}" alt="${student.name}" />
+          <div class="profile-info">
+            <div class="profile-name">${student.name}</div>
+            <div class="profile-id">${student.id}</div>
+          </div>
+          <div class="buttons">
+            <button class="present-btn" onclick="markAttendance(${index}, 'Present')">Present</button>
+            <button class="absent-btn" onclick="markAttendance(${index}, 'Absent')">Absent</button>
+            <button class="late-btn" onclick="markAttendance(${index}, 'Late')">Late</button>
+            <button class="show-notes-btn" onclick="toggleNotes(${index})">Notes</button>
+          </div>
+          <div class="status status-not-marked" id="status-${index}">Not Marked</div>
+          <div class="notes-input" id="notes-${index}">
+            <textarea placeholder="Add notes about this student's attendance..."></textarea>
+          </div>
+        `;
+
+        profileContainer.appendChild(profileDiv);
+      });
+    }
+
+    function markAttendance(index, status) {
+      const statusDiv = document.getElementById(`status-${index}`);
+      statusDiv.textContent = status;
+      statusDiv.className = `status status-${status.toLowerCase()}`;
+      updateSummary();
+    }
+
+    function toggleNotes(index) {
+      const notesDiv = document.getElementById(`notes-${index}`);
+      if (notesDiv.style.display === "block") {
+        notesDiv.style.display = "none";
+      } else {
+        notesDiv.style.display = "block";
+      }
+    }
+
+    function markAll(status) {
+      currentStudents.forEach((_, index) => markAttendance(index, status));
+    }
+
+    function resetAll() {
+      currentStudents.forEach((_, index) => {
+        const statusDiv = document.getElementById(`status-${index}`);
+        statusDiv.textContent = 'Not Marked';
+        statusDiv.className = 'status status-not-marked';
+      });
+      updateSummary();
+    }
+
+    function updateSummary() {
+      let presentCount = 0;
+      let absentCount = 0;
+      let lateCount = 0;
+
+      currentStudents.forEach((_, index) => {
+        const status = document.getElementById(`status-${index}`).textContent;
+        if (status === 'Present') presentCount++;
+        else if (status === 'Absent') absentCount++;
+        else if (status === 'Late') lateCount++;
+      });
+
+      const totalMarked = presentCount + absentCount + lateCount;
+      const totalStudents = currentStudents.length;
+      const attendanceRate = totalStudents > 0 ? 
+        Math.round(((presentCount + lateCount) / totalStudents) * 100) : 0;
+
+      document.getElementById('present-count').textContent = presentCount;
+      document.getElementById('absent-count').textContent = absentCount;
+      document.getElementById('late-count').textContent = lateCount;
+      document.getElementById('total-count').textContent = totalStudents;
+      document.getElementById('attendance-percentage').textContent = `${attendanceRate}%`;
+    }
+
+    function postAttendance() {
+      const courseId = document.getElementById("course-select").value;
+      const currentDate = new Date().toISOString().split('T')[0];
+      
+      const attendance = currentStudents.map((student, index) => {
+        const statusDiv = document.getElementById(`status-${index}`);
+        const notesDiv = document.getElementById(`notes-${index}`);
+        const notes = notesDiv.querySelector("textarea").value;
+        
+        return { 
+          id: student.id, 
+          name: student.name, 
+          status: statusDiv.textContent,
+          notes: notes,
+          course: courseId,
+          date: currentDate
+        };
+      });
+      
+      console.log("Posted Attendance:", attendance);
+      
+      // In a real application, this would send data to a server
+      const successMessage = `Attendance for ${courseId.toUpperCase()} on ${formatDate(new Date())} has been recorded!`;
+      alert(successMessage);
+    }
+
+    function formatDate(date) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString(undefined, options);
+    }
+
+    // Show current date and time
+    function updateDateTime() {
+      const now = new Date();
+      const options = { 
+        weekday: 'long',
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit'
+      };
+      const formatted = now.toLocaleDateString(undefined, options);
+      document.getElementById("datetime").textContent = formatted;
+    }
+
+    // Initialize
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    loadStudents(); // Load first course by default
+  </script>
+</body>
+</html>

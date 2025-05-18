@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Groq AI Chatbot</title>
+  <style>
+    #chatbox {
+      width: 400px;
+      height: 500px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    .message {
+      margin: 8px 0;
+    }
+    .user { text-align: right; color: blue; }
+    .bot { text-align: left; color: green; }
+  </style>
+</head>
+<body>
+
+  <h2>Groq AI Chatbot</h2>
+  <div id="chatbox"></div>
+
+  <input type="text" id="user-input" placeholder="Type your message...">
+  <button id="send-btn">Send</button>
+
+  <script src="groq-chatbot.js"></script>
+</body>
+</html>

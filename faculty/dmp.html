@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grading Assessment System</title>
+    <link rel="stylesheet" href="grading-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<style>
+  /* Global Styles */
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --accent-color: #e74c3c;
+  --light-color: #ecf0f1;
+  --dark-color: #2c3e50;
+  --grey-color: #95a5a6;
+  --light-grey: #e2e4e6;
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+  --error-color: #c0392b;
+  --border-radius: 4px;
+  --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--dark-color);
+  background-color: #f5f7fa;
+}
+
+/* Header Styles */
+header {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.header-container h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#faculty-name {
+  font-weight: 500;
+}
+
+#logout-btn {
+  background-color: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+#logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Navigation Styles */
+nav {
+  background-color: #34495e;
+  padding: 0 2rem;
+}
+
+nav ul {
+  display: flex;
+  list-style-type: none;
+}
+
+nav li {
+  margin-right: 0.5rem;
+}
+
+nav a {
+  display: block;
+  color: #ecf0f1;
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  font-weight: 500;
+  transition: var(--transition);
+  border-bottom: 3px solid transparent;
+}
+
+nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+nav a.active {
+  border-bottom: 3px solid var(--secondary-color);
+  font-weight: 600;
+}
+
+/* Main Content Styles */
+main {
+  padding: 2rem;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Course Selector Section */
+.course-selector {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--box-shadow);
+}
+
+.course-selector h2 {
+  margin-bottom: 1.2rem;
+  color: var(--primary-color);
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 220px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--dark-color);
+}
+
+.filter-group select {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+  background-color: white;
+  color: var(--dark-color);
+  transition: var(--transition);
+}
+
+.filter-group select:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Assessments Section */
+.assessments-container {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--box-shadow);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.section-header h3 {
+  color: var(--primary-color);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Buttons */
+.primary-btn, .secondary-btn, .publish-btn, .template-btn {
+  padding: 0.6rem 1rem;
+  border-radius: var(--border-radius);
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.primary-btn {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.primary-btn:hover {
+  background-color: #2980b9;
+}
+
+.secondary-btn {
+  background-color: #f1f3f5;
+  color: var(--dark-color);
+  border: 1px solid #ddd;
+}
+
+.secondary-btn:hover {
+  background-color: #e9ecef;
+}
+
+.publish-btn {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.publish-btn:hover {
+  background-color: #219653;
+}
+
+.small-btn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: var(--border-radius);
+  background-color: #f1f3f5;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.small-btn:hover {
+  background-color: #e9ecef;
+}
+
+/* Search Box */
+.search-box {
+  position: relative;
+  flex: 1;
+  max-width: 300px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.7rem 2.5rem 0.7rem 1rem;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+}
+
+.search-box input:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.search-box i {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--grey-color);
+}
+
+/* Assessment List */
+.assessments-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.assessment-card {
+  background-color: white;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.assessment-card:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.card-subtitle {
+  color: var(--grey-color);
+  font-size: 0.85rem;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.card-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: #fef5e7;
+  color: #f39c12;
+}
+
+.status-in-progress {
+  background-color: #e8f4fd;
+  color: #3498db;
+}
+
+.status-completed {
+  background-color: #eafaf1;
+  color: #27ae60;
+}
+
+.status-published {
+  background-color: #f4f6f7;
+  color: #2c3e50;
+}
+
+.student-count {
+  font-size: 0.85rem;
+  color: var(--grey-color);
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--grey-color);
+  margin-bottom: 1rem;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border-top: 1px solid var(--light-grey);
+  background-color: #f8f9fa;
+}
+
+.progress-circle {
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+
+/* Modals */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 2rem auto;
+  border-radius: var(--border-radius);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  width: 95%;
+  animation: modalFadeIn 0.3s ease;
+}
+
+.modal-xl .modal-content {
+  max-width: 1200px;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--light-grey);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  color: var(--dark-color);
+}
+
+.close {
+  font-size: 1.5rem;
+  color: var(--grey-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.close:hover {
+  color: var(--dark-color);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+/* Grading Interface */
+.grading-interface {
+  display: flex;
+  min-height: 600px;
+}
+
+.grading-sidebar {
+  flex: 0 0 280px;
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--light-grey);
+  display: flex;
+  flex-direction: column;
+}
+
+.course-info-box {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.course-info-box h4 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.meta {
+  color: var(--grey-color);
+  font-size: 0.85rem;
+}
+
+.student-list-container {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.student-filter {
+  margin-bottom: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.student-filter input,
+.student-filter select {
+  padding: 0.5rem;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+  width: 100%;
+}
+
+.student-filter input:focus,
+.student-filter select:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.student-list {
+  list-style-type: none;
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+}
+
+.student-item {
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--light-grey);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.student-item:last-child {
+  border-bottom: none;
+}
+
+.student-item:hover {
+  background-color: #f8f9fa;
+}
+
+.student-item.active {
+  background-color: #e8f4fd;
+  border-left: 3px solid var(--secondary-color);
+}
+
+.student-name {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.student-id {
+  font-size: 0.75rem;
+  color: var(--grey-color);
+}
+
+.student-status {
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+}
+
+.status-pending {
+  color: var(--warning-color);
+}
+
+.status-graded {
+  color: var(--success-color);
+}
+
+.grading-progress {
+  margin: 1.5rem 0;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: var(--light-grey);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: var(--success-color);
+  transition: width 0.3s ease;
+}
+
+.grading-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.grading-actions button {
+  flex: 1;
+}
+
+.grading-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-left: 1.5rem;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--light-grey);
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  padding: 0.8rem 1.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--grey-color);
+  position: relative;
+  transition: var(--transition);
+}
+
+.tab-btn:hover {
+  color: var(--primary-color);
+}
+
+.tab-btn.active {
+  color: var(--secondary-color);
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--secondary-color);
+}
+
+.tab-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.tab-pane {
+  display: none;
+  height: 100%;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Submission Tab */
+.submission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.submission-meta {
+  font-size: 0.85rem;
+  color: var(--grey-color);
+}
+
+.submission-meta span {
+  margin-left: 1rem;
+}
+
+.submission-content {
+  display: flex;
+  height: calc(100% - 40px);
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+}
+
+.submission-files {
+  flex: 0 0 200px;
+  border-right: 1px solid var(--light-grey);
+  overflow-y: auto;
+}
+
+.file-item {
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--light-grey);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.file-item:hover {
+  background-color: #f8f9fa;
+}
+
+.file-item.active {
+  background-color: #e8f4fd;
+}
+
+.file-icon {
+  color: var(--primary-color);
+}
+
+.file-name {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-preview {
+  flex: 1;
+  padding: 1rem;
+  overflow: auto;
+}
+
+/* Rubric Tab */
+.rubric-container {
+  padding: 1rem;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+}
+
+.rubric-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.rubric-table th,
+.rubric-table td {
+  padding: 0.8rem;
+  border: 1px solid var(--light-grey);
+}
+
+.rubric-table th {
+  background-color: #f8f9fa;
+  text-align: left;
+}
+
+.rubric-criteria {
+  font-weight: 500;
+}
+
+.rubric-level {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.level-radio {
+  margin-right: 0.5rem;
+}
+
+.level-name {
+  font-weight: 500;
+}
+
+.level-description {
+  font-size: 0.85rem;
+  color: var(--grey-color);
+  margin-top: 0.3rem;
+}
+
+/* Feedback Tab */
+.feedback-container {
+  padding: 1rem;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+}
+
+.feedback-form {
+  margin-top: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.grade-input {
+  display: flex;
+  align-items: center;
+  max-width: 150px;
+}
+
+.grade-suffix {
+  margin-left: 0.5rem;
+  color: var(--grey-color);
+}
+
+input[type="number"],
+input[type="text"],
+textarea,
+select {
+  padding: 0.7rem;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+  width: 100%;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.checkbox-group {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.template-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.template-btn {
+  padding: 0.4rem 0.8rem;
+  background-color: #f1f3f5;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.template-btn:hover {
+  background-color: #e9ecef;
+}
+
+.annotation-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.help-text {
+  font-size: 0.8rem;
+  color: var(--grey-color);
+}
+
+/* History Tab */
+.history-container {
+  padding: 1rem;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+}
+
+.timeline {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.timeline-item:before {
+  content: '';
+  position: absolute;
+  left: -0.35rem;
+  top: 0.25rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+}
+
+.timeline-item:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6rem;
+  width: 1px;
+  height: 100%;
+  background-color: var(--light-grey);
+}
+
+.timeline-item:last-child:after {
+  display: none;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-title {
+  font-weight: 500;
+}
+
+.timeline-date {
+  font-size: 0.85rem;
+  color: var(--grey-color);
+}
+
+.timeline-body {
+  font-size: 0.9rem;
+  color: var(--dark-color);
+}
+
+/* Grading Footer */
+.grading-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--light-grey);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.grade-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.current-grade {
+  font-weight: 500;
+}
+
+.grade-status {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+}
+
+.grade-status.pending {
+  background-color: #fef5e7;
+  color: #f39c12;
+}
+
+.grade-status.saved {
+  background-color: #eafaf1;
+  color: #27ae60;
+}
+
+.grade-status.published {
+  background-color: #f4f6f7;
+  color: #2c3e50;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Rubric Builder Styles */
+.rubric-builder {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.rubric-criteria-container {
+  margin-top: 1.5rem;
+}
+
+.rubric-criteria-container h4 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.criteria-item {
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.criteria-header {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.criteria-name {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.criteria-points {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.criteria-points input {
+  max-width: 70px;
+}
+
+.remove-criteria-btn {
+  background: none;
+  border: none;
+  color: var(--grey-color);
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin-left: 0.5rem;
+  transition: var(--transition);
+}
+
+.remove-criteria-btn:hover {
+  color: var(--accent-color);
+}
+
+.criteria-description {
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.criteria-levels {
+  padding: 0.8rem;
+}
+
+.level-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 4fr;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.level-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.level-points {
+  max-width: 100%;
+}
+
+.level-description {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.rubric-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Footer */
+footer {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--grey-color);
+  background-color: #f8f9fa;
+  border-top: 1px solid var(--light-grey);
+  margin-top: 2rem;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 992px) {
+  .grading-interface {
+    flex-direction: column;
+  }
+  
+  .grading-sidebar {
+    flex: none;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--light-grey);
+    padding-right: 0;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .grading-main {
+    padding-left: 0;
+  }
+  
+  .student-list-container {
+    max-height: 200px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .user-info {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  nav {
+    overflow-x: auto;
+    padding: 0 1rem;
+  }
+  
+  nav ul {
+    width: max-content;
+  }
+  
+  .filter-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-box {
+    max-width: none;
+  }
+  
+  .submission-content {
+    flex-direction: column;
+  }
+  
+  .submission-files {
+    flex: none;
+    height: 120px;
+    border-right: none;
+    border-bottom: 1px solid var(--light-grey);
+  }
+  
+  .level-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .grading-footer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .grade-summary {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .action-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Additional Utility Classes */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-gray {
+  color: var(--grey-color);
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.text
+</style>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Faculty Portal - Grading Assessments</h1>
+            <div class="user-info">
+                <span id="faculty-name">Dr. Smith</span>
+                <button id="logout-btn">Logout</button>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="modules.html">Course Modules</a></li>
+                <li><a href="attendance.html">Attendance</a></li>
+                <li><a href="assignments.html">Assignments</a></li>
+                <li><a href="grading.html" class="active">Grading</a></li>
+                <li><a href="reports.html">Reports</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="course-selector">
+                <h2>Grading Assessment System</h2>
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="course-select">Course:</label>
+                        <select id="course-select">
+                            <option value="">-- Select Course --</option>
+                            <option value="CS101">CS101: Introduction to Computer Science</option>
+                            <option value="CS205">CS205: Data Structures & Algorithms</option>
+                            <option value="CS301">CS301: Database Systems</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="assessment-type">Assessment Type:</label>
+                        <select id="assessment-type">
+                            <option value="">All Types</option>
+                            <option value="assignment">Assignments</option>
+                            <option value="quiz">Quizzes</option>
+                            <option value="exam">Exams</option>
+                            <option value="project">Projects</option>
+                            <option value="presentation">Presentations</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="status-filter">Status:</label>
+                        <select id="status-filter">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending Grading</option>
+                            <option value="in-progress">Grading In Progress</option>
+                            <option value="completed">Grading Completed</option>
+                            <option value="published">Grades Published</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="assessments-container" id="assessments-container">
+                <div class="section-header">
+                    <h3>Assessments to Grade</h3>
+                    <div class="actions">
+                        <button id="create-rubric-btn" class="secondary-btn">
+                            <i class="fas fa-table"></i> Create Rubric
+                        </button>
+                        <div class="search-box">
+                            <input type="text" id="search-assessments" placeholder="Search assessments...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="assessments-list" id="assessments-list">
+                    <!-- Assessment items will be dynamically populated -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Grading Interface Modal -->
+    <div id="grading-modal" class="modal modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="grading-modal-title">Grading: Assignment</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="grading-interface">
+                    <div class="grading-sidebar">
+                        <div class="course-info-box">
+                            <h4 id="grading-course-title">Course Title</h4>
+                            <p id="grading-assessment-title">Assessment Title</p>
+                            <p class="meta" id="grading-assessment-meta">Due Date | Points</p>
+                        </div>
+                        
+                        <div class="student-list-container">
+                            <div class="student-filter">
+                                <input type="text" id="student-search" placeholder="Search students...">
+                                <select id="grading-status-filter">
+                                    <option value="all">All Students</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="graded">Graded</option>
+                                </select>
+                            </div>
+                            <ul class="student-list" id="student-list">
+                                <!-- Student list will be dynamically populated -->
+                            </ul>
+                        </div>
+                        
+                        <div class="grading-progress">
+                            <div class="progress-info">
+                                <span id="progress-text">Progress: 0/0 Graded</span>
+                                <span id="progress-percentage">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" id="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="grading-actions">
+                            <button id="previous-student" class="secondary-btn">
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                            <button id="next-student" class="primary-btn">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grading-main">
+                        <div class="tabs">
+                            <button class="tab-btn active" data-tab="submission">Submission</button>
+                            <button class="tab-btn" data-tab="rubric">Rubric</button>
+                            <button class="tab-btn" data-tab="feedback">Feedback</button>
+                            <button class="tab-btn" data-tab="history">History</button>
+                        </div>
+                        
+                        <div class="tab-content">
+                            <div id="submission-tab" class="tab-pane active">
+                                <div class="submission-header">
+                                    <h4 id="student-submission-header">Student's Submission</h4>
+                                    <div class="submission-meta">
+                                        <span id="submission-timestamp"><i class="fas fa-clock"></i> Submitted: Date</span>
+                                        <span id="submission-file-count"><i class="fas fa-file"></i> Files</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="submission-content">
+                                    <div class="submission-files" id="submission-files">
+                                        <!-- Files will be dynamically populated -->
+                                    </div>
+                                    
+                                    <div class="file-preview" id="file-preview">
+                                        <!-- File preview will be shown here -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="rubric-tab" class="tab-pane">
+                                <div class="rubric-container">
+                                    <h4>Grading Rubric</h4>
+                                    <div class="rubric-table" id="rubric-table">
+                                        <!-- Rubric will be dynamically populated -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="feedback-tab" class="tab-pane">
+                                <div class="feedback-container">
+                                    <h4>Feedback to Student</h4>
+                                    <div class="feedback-form">
+                                        <div class="form-group">
+                                            <label for="overall-grade">Overall Grade</label>
+                                            <div class="grade-input">
+                                                <input type="number" id="overall-grade" min="0" max="100" value="0">
+                                                <span class="grade-suffix">/100</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="feedback-text">Written Feedback</label>
+                                            <textarea id="feedback-text" rows="8" placeholder="Provide detailed feedback to the student..."></textarea>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label>Feedback Options</label>
+                                            <div class="checkbox-group">
+                                                <div class="checkbox-item">
+                                                    <input type="checkbox" id="resubmit" name="resubmit">
+                                                    <label for="resubmit">Allow Resubmission</label>
+                                                </div>
+                                                <div class="checkbox-item">
+                                                    <input type="checkbox" id="private-feedback" name="private-feedback" checked>
+                                                    <label for="private-feedback">Private Feedback</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label>Quick Feedback Templates</label>
+                                            <div class="template-buttons">
+                                                <button class="template-btn" data-template="good">Good Work</button>
+                                                <button class="template-btn" data-template="improve">Needs Improvement</button>
+                                                <button class="template-btn" data-template="style">Code Style</button>
+                                                <button class="template-btn" data-template="testing">Testing</button>
+                                                <button class="template-btn" data-template="documentation">Documentation</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="annotation-toggle">
+                                            <input type="checkbox" id="enable-annotations" name="enable-annotations">
+                                            <label for="enable-annotations">Enable Code Annotations</label>
+                                            <span class="help-text">(Add comments directly on code)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="history-tab" class="tab-pane">
+                                <div class="history-container">
+                                    <h4>Grading History</h4>
+                                    <div class="timeline" id="grading-timeline">
+                                        <!-- Timeline items will be dynamically populated -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grading-footer">
+                            <div class="grade-summary">
+                                <div class="current-grade">
+                                    <span class="grade-label">Current Grade:</span>
+                                    <span class="grade-value" id="current-grade">0/100</span>
+                                </div>
+                                <div class="grade-status pending" id="grade-status">Not Saved</div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="secondary-btn" id="save-draft-btn">
+                                    <i class="fas fa-save"></i> Save Draft
+                                </button>
+                                <button class="primary-btn" id="save-next-btn">
+                                    <i class="fas fa-check"></i> Save & Next
+                                </button>
+                                <button class="publish-btn" id="save-publish-btn">
+                                    <i class="fas fa-paper-plane"></i> Save & Publish
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Rubric Modal -->
+    <div id="rubric-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Grading Rubric</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="rubric-builder">
+                    <div class="form-group">
+                        <label for="rubric-title">Rubric Title</label>
+                        <input type="text" id="rubric-title" placeholder="Enter rubric title...">
+                    </div>
+                    <div class="form-group">
+                        <label for="rubric-course">Course</label>
+                        <select id="rubric-course">
+                            <option value="">-- Select Course --</option>
+                            <option value="CS101">CS101: Introduction to Computer Science</option>
+                            <option value="CS205">CS205: Data Structures & Algorithms</option>
+                            <option value="CS301">CS301: Database Systems</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="total-points">Total Points</label>
+                        <input type="number" id="total-points" min="0" value="100">
+                    </div>
+
+                    <div class="rubric-criteria-container">
+                        <h4>Criteria
+                            <button id="add-criteria-btn" class="small-btn">
+                                <i class="fas fa-plus"></i> Add Criteria
+                            </button>
+                        </h4>
+                        <div id="rubric-criteria-list">
+                            <!-- Criteria will be added here -->
+                            <div class="criteria-item" data-id="criteria-1">
+                                <div class="criteria-header">
+                                    <input type="text" class="criteria-name" placeholder="Criteria name...">
+                                    <div class="criteria-points">
+                                        <input type="number" class="points-value" min="0" value="25">
+                                        <span>points</span>
+                                    </div>
+                                    <button class="remove-criteria-btn">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="criteria-description">
+                                    <textarea placeholder="Description of this criteria..."></textarea>
+                                </div>
+                                <div class="criteria-levels">
+                                    <div class="level-item">
+                                        <input type="text" class="level-name" placeholder="Excellent">
+                                        <input type="number" class="level-points" min="0" value="25">
+                                        <textarea class="level-description" placeholder="Description for this level..."></textarea>
+                                    </div>
+                                    <div class="level-item">
+                                        <input type="text" class="level-name" placeholder="Good">
+                                        <input type="number" class="level-points" min="0" value="20">
+                                        <textarea class="level-description" placeholder="Description for this level..."></textarea>
+                                    </div>
+                                    <div class="level-item">
+                                        <input type="text" class="level-name" placeholder="Needs Improvement">
+                                        <input type="number" class="level-points" min="0" value="15">
+                                        <textarea class="level-description" placeholder="Description for this level..."></textarea>
+                                    </div>
+                                    <div class="level-item">
+                                        <input type="text" class="level-name" placeholder="Poor">
+                                        <input type="number" class="level-points" min="0" value="10">
+                                        <textarea class="level-description" placeholder="Description for this level..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rubric-actions">
+                        <button id="save-rubric-btn" class="primary-btn">
+                            <i class="fas fa-save"></i> Save Rubric
+                        </button>
+                        <button id="cancel-rubric-btn" class="secondary-btn">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Faculty Portal. All rights reserved.</p>
+    </footer>
+
+    <script>// Grading Assessment System - Main JavaScript File
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize components
+    initializeUI();
+    loadMockData();
+    setupEventListeners();
+});
+
+// UI Initialization
+function initializeUI() {
+    console.log('Initializing Grading Assessment System UI...');
+    
+    // Hide modals initially
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.style.display = 'none';
+    });
+    
+    // Initialize tabs in grading interface
+    initializeTabs();
+}
+
+// Initialize tab functionality
+function initializeTabs() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all tabs
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            // Hide all tab panes
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            
+            // Show the selected tab pane
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        });
+    });
+}
+
+// Setup all event listeners
+function setupEventListeners() {
+    // Course selector change event
+    const courseSelect = document.getElementById('course-select');
+    if (courseSelect) {
+        courseSelect.addEventListener('change', filterAssessments);
+    }
+    
+    // Assessment type filter change event
+    const assessmentTypeSelect = document.getElementById('assessment-type');
+    if (assessmentTypeSelect) {
+        assessmentTypeSelect.addEventListener('change', filterAssessments);
+    }
+    
+    // Status filter change event
+    const statusFilter = document.getElementById('status-filter');
+    if (statusFilter) {
+        statusFilter.addEventListener('change', filterAssessments);
+    }
+    
+    // Search assessments
+    const searchAssessments = document.getElementById('search-assessments');
+    if (searchAssessments) {
+        searchAssessments.addEventListener('input', filterAssessments);
+    }
+    
+    // Create Rubric button
+    const createRubricBtn = document.getElementById('create-rubric-btn');
+    if (createRubricBtn) {
+        createRubricBtn.addEventListener('click', openRubricModal);
+    }
+    
+    // Modal close buttons
+    const closeButtons = document.querySelectorAll('.close');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+    
+    // Add criteria button in rubric modal
+    const addCriteriaBtn = document.getElementById('add-criteria-btn');
+    if (addCriteriaBtn) {
+        addCriteriaBtn.addEventListener('click', addRubricCriteria);
+    }
+    
+    // Save rubric button
+    const saveRubricBtn = document.getElementById('save-rubric-btn');
+    if (saveRubricBtn) {
+        saveRubricBtn.addEventListener('click', saveRubric);
+    }
+    
+    // Cancel rubric button
+    const cancelRubricBtn = document.getElementById('cancel-rubric-btn');
+    if (cancelRubricBtn) {
+        cancelRubricBtn.addEventListener('click', function() {
+            document.getElementById('rubric-modal').style.display = 'none';
+        });
+    }
+    
+    // Setup student list event listeners
+    setupStudentListListeners();
+    
+    // Setup grading action buttons
+    setupGradingActionButtons();
+    
+    // Setup template buttons for feedback
+    setupFeedbackTemplates();
+}
+
+// Load mock data for demonstration
+function loadMockData() {
+    console.log('Loading mock data...');
+    
+    // Load mock assessments
+    loadMockAssessments();
+    
+    // Load mock students for the first assessment
+    loadMockStudents();
+}
+
+// Load mock assessments data
+function loadMockAssessments() {
+    const assessmentsContainer = document.getElementById('assessments-list');
+    if (!assessmentsContainer) return;
+    
+    // Clear existing content
+    assessmentsContainer.innerHTML = '';
+    
+    // Mock assessment data
+    const mockAssessments = [
+        {
+            id: 'asgn-1',
+            title: 'Assignment 1: Data Structures Implementation',
+            course: 'CS205',
+            courseTitle: 'Data Structures & Algorithms',
+            type: 'assignment',
+            dueDate: '2025-04-10',
+            totalStudents: 35,
+            gradedCount: 12,
+            totalPoints: 100,
+            status: 'in-progress'
+        },
+        {
+            id: 'quiz-1',
+            title: 'Quiz 1: Introduction to Algorithms',
+            course: 'CS205',
+            courseTitle: 'Data Structures & Algorithms',
+            type: 'quiz',
+            dueDate: '2025-04-05',
+            totalStudents: 33,
+            gradedCount: 33,
+            totalPoints: 50,
+            status: 'completed'
+        },
+        {
+            id: 'midterm-1',
+            title: 'Midterm Exam',
+            course: 'CS205',
+            courseTitle: 'Data Structures & Algorithms',
+            type: 'exam',
+            dueDate: '2025-03-20',
+            totalStudents: 35,
+            gradedCount: 35,
+            totalPoints: 100,
+            status: 'published'
+        },
+        {
+            id: 'proj-1',
+            title: 'Database Design Project',
+            course: 'CS301',
+            courseTitle: 'Database Systems',
+            type: 'project',
+            dueDate: '2025-04-15',
+            totalStudents: 28,
+            gradedCount: 0,
+            totalPoints: 150,
+            status: 'pending'
+        },
+        {
+            id: 'asgn-2',
+            title: 'Assignment 1: Hello World Program',
+            course: 'CS101',
+            courseTitle: 'Introduction to Computer Science',
+            type: 'assignment',
+            dueDate: '2025-04-12',
+            totalStudents: 42,
+            gradedCount: 15,
+            totalPoints: 50,
+            status: 'in-progress'
+        },
+        {
+            id: 'presentation-1',
+            title: 'Topic Presentation',
+            course: 'CS101',
+            courseTitle: 'Introduction to Computer Science',
+            type: 'presentation',
+            dueDate: '2025-04-18',
+            totalStudents: 42,
+            gradedCount: 0,
+            totalPoints: 75,
+            status: 'pending'
+        }
+    ];
+    
+    // Create and append assessment items
+    mockAssessments.forEach(assessment => {
+        const assessmentItem = createAssessmentItem(assessment);
+        assessmentsContainer.appendChild(assessmentItem);
+    });
+}
+
+// Create an assessment item element
+function createAssessmentItem(assessment) {
+    const item = document.createElement('div');
+    item.className = 'assessment-item';
+    item.setAttribute('data-id', assessment.id);
+    item.setAttribute('data-course', assessment.course);
+    item.setAttribute('data-type', assessment.type);
+    item.setAttribute('data-status', assessment.status);
+    
+    // Calculate progress percentage
+    const progressPercent = assessment.totalStudents > 0 
+        ? Math.round((assessment.gradedCount / assessment.totalStudents) * 100) 
+        : 0;
+    
+    // Format due date
+    const dueDate = new Date(assessment.dueDate);
+    const formattedDate = dueDate.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+    });
+    
+    // Status class for styling
+    let statusClass = '';
+    let statusText = '';
+    
+    switch(assessment.status) {
+        case 'pending':
+            statusClass = 'status-pending';
+            statusText = 'Pending Grading';
+            break;
+        case 'in-progress':
+            statusClass = 'status-in-progress';
+            statusText = 'Grading In Progress';
+            break;
+        case 'completed':
+            statusClass = 'status-completed';
+            statusText = 'Grading Completed';
+            break;
+        case 'published':
+            statusClass = 'status-published';
+            statusText = 'Grades Published';
+            break;
+    }
+    
+    // Determine icon based on type
+    let typeIcon = '';
+    switch(assessment.type) {
+        case 'assignment':
+            typeIcon = 'fa-file-alt';
+            break;
+        case 'quiz':
+            typeIcon = 'fa-question';
+            break;
+        case 'exam':
+            typeIcon = 'fa-book';
+            break;
+        case 'project':
+            typeIcon = 'fa-project-diagram';
+            break;
+        case 'presentation':
+            typeIcon = 'fa-presentation';
+            break;
+        default:
+            typeIcon = 'fa-file';
+    }
+    
+    item.innerHTML = `
+        <div class="assessment-icon">
+            <i class="fas ${typeIcon}"></i>
+        </div>
+        <div class="assessment-details">
+            <h4>${assessment.title}</h4>
+            <p class="assessment-course">${assessment.courseTitle}</p>
+            <div class="assessment-meta">
+                <span><i class="far fa-calendar-alt"></i> Due: ${formattedDate}</span>
+                <span><i class="fas fa-users"></i> Students: ${assessment.totalStudents}</span>
+                <span><i class="fas fa-star"></i> Points: ${assessment.totalPoints}</span>
+            </div>
+        </div>
+        <div class="assessment-progress">
+            <div class="progress-label">
+                <span>Progress: ${assessment.gradedCount}/${assessment.totalStudents} graded</span>
+                <span>${progressPercent}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress" style="width: ${progressPercent}%"></div>
+            </div>
+            <div class="assessment-status ${statusClass}">${statusText}</div>
+        </div>
+        <div class="assessment-actions">
+            <button class="grade-btn" data-id="${assessment.id}">
+                <i class="fas fa-pen"></i> Grade
+            </button>
+            <button class="options-btn">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+        </div>
+    `;
+    
+    // Add click event for the grade button
+    const gradeBtn = item.querySelector('.grade-btn');
+    gradeBtn.addEventListener('click', function() {
+        openGradingModal(assessment);
+    });
+    
+    return item;
+}
+
+// Filter assessments based on selected filters
+function filterAssessments() {
+    const courseFilter = document.getElementById('course-select').value;
+    const typeFilter = document.getElementById('assessment-type').value;
+    const statusFilter = document.getElementById('status-filter').value;
+    const searchText = document.getElementById('search-assessments').value.toLowerCase();
+    
+    const assessmentItems = document.querySelectorAll('.assessment-item');
+    
+    assessmentItems.forEach(item => {
+        const course = item.getAttribute('data-course');
+        const type = item.getAttribute('data-type');
+        const status = item.getAttribute('data-status');
+        const title = item.querySelector('h4').textContent.toLowerCase();
+        
+        const courseMatch = !courseFilter || course === courseFilter;
+        const typeMatch = !typeFilter || type === typeFilter;
+        const statusMatch = !statusFilter || status === statusFilter;
+        const searchMatch = !searchText || title.includes(searchText);
+        
+        if (courseMatch && typeMatch && statusMatch && searchMatch) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+// Open the rubric creation modal
+function openRubricModal() {
+    const modal = document.getElementById('rubric-modal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+// Add a new criteria to the rubric builder
+function addRubricCriteria() {
+    const criteriaList = document.getElementById('rubric-criteria-list');
+    if (!criteriaList) return;
+    
+    const criteriaCount = criteriaList.querySelectorAll('.criteria-item').length;
+    const newCriteriaId = `criteria-${criteriaCount + 1}`;
+    
+    const criteriaItem = document.createElement('div');
+    criteriaItem.className = 'criteria-item';
+    criteriaItem.setAttribute('data-id', newCriteriaId);
+    
+    criteriaItem.innerHTML = `
+        <div class="criteria-header">
+            <input type="text" class="criteria-name" placeholder="Criteria name...">
+            <div class="criteria-points">
+                <input type="number" class="points-value" min="0" value="25">
+                <span>points</span>
+            </div>
+            <button class="remove-criteria-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="criteria-description">
+            <textarea placeholder="Description of this criteria..."></textarea>
+        </div>
+        <div class="criteria-levels">
+            <div class="level-item">
+                <input type="text" class="level-name" placeholder="Excellent">
+                <input type="number" class="level-points" min="0" value="25">
+                <textarea class="level-description" placeholder="Description for this level..."></textarea>
+            </div>
+            <div class="level-item">
+                <input type="text" class="level-name" placeholder="Good">
+                <input type="number" class="level-points" min="0" value="20">
+                <textarea class="level-description" placeholder="Description for this level..."></textarea>
+            </div>
+            <div class="level-item">
+                <input type="text" class="level-name" placeholder="Needs Improvement">
+                <input type="number" class="level-points" min="0" value="15">
+                <textarea class="level-description" placeholder="Description for this level..."></textarea>
+            </div>
+            <div class="level-item">
+                <input type="text" class="level-name" placeholder="Poor">
+                <input type="number" class="level-points" min="0" value="10">
+                <textarea class="level-description" placeholder="Description for this level..."></textarea>
+            </div>
+        </div>
+    `;
+    
+    criteriaList.appendChild(criteriaItem);
+    
+    // Add event listener for the remove button
+    const removeBtn = criteriaItem.querySelector('.remove-criteria-btn');
+    removeBtn.addEventListener('click', function() {
+        criteriaList.removeChild(criteriaItem);
+    });
+}
+
+// Save the rubric
+function saveRubric() {
+    // In a real application, this would save to a database
+    console.log('Saving rubric...');
+    
+    // Get rubric data
+    const rubricTitle = document.getElementById('rubric-title').value;
+    const rubricCourse = document.getElementById('rubric-course').value;
+    const totalPoints = document.getElementById('total-points').value;
+    
+    // Collect criteria data
+    const criteria = [];
+    const criteriaItems = document.querySelectorAll('.criteria-item');
+    
+    criteriaItems.forEach(item => {
+        const criteriaName = item.querySelector('.criteria-name').value;
+        const criteriaPoints = item.querySelector('.points-value').value;
+        const criteriaDescription = item.querySelector('.criteria-description textarea').value;
+        
+        const levels = [];
+        const levelItems = item.querySelectorAll('.level-item');
+        
+        levelItems.forEach(levelItem => {
+            const levelName = levelItem.querySelector('.level-name').value;
+            const levelPoints = levelItem.querySelector('.level-points').value;
+            const levelDescription = levelItem.querySelector('.level-description').value;
+            
+            levels.push({
+                name: levelName,
+                points: levelPoints,
+                description: levelDescription
+            });
+        });
+        
+        criteria.push({
+            name: criteriaName,
+            points: criteriaPoints,
+            description: criteriaDescription,
+            levels: levels
+        });
+    });
+    
+    const rubricData = {
+        title: rubricTitle,
+        course: rubricCourse,
+        totalPoints: totalPoints,
+        criteria: criteria
+    };
+    
+    console.log('Rubric data:', rubricData);
+    
+    // Close the modal
+    document.getElementById('rubric-modal').style.display = 'none';
+    
+    // Show success message
+    alert('Rubric saved successfully!');
+}
+
+// Open the grading modal for an assessment
+function openGradingModal(assessment) {
+    const modal = document.getElementById('grading-modal');
+    if (!modal) return;
+    
+    // Set modal title and content
+    document.getElementById('grading-modal-title').textContent = `Grading: ${assessment.title}`;
+    document.getElementById('grading-course-title').textContent = assessment.courseTitle;
+    document.getElementById('grading-assessment-title').textContent = assessment.title;
+    
+    // Format due date
+    const dueDate = new Date(assessment.dueDate);
+    const formattedDate = dueDate.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+    });
+    
+    document.getElementById('grading-assessment-meta').textContent = 
+        `Due: ${formattedDate} | Points: ${assessment.totalPoints}`;
+    
+    // Update progress information
+    document.getElementById('progress-text').textContent = 
+        `Progress: ${assessment.gradedCount}/${assessment.totalStudents} Graded`;
+    
+    const progressPercent = assessment.totalStudents > 0 
+        ? Math.round((assessment.gradedCount / assessment.totalStudents) * 100) 
+        : 0;
+    
+    document.getElementById('progress-percentage').textContent = `${progressPercent}%`;
+    document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
+    
+    // Display the modal
+    modal.style.display = 'block';
+    
+    // Load the first student
+    loadStudentSubmission(0);
+}
+
+// Load mock students data
+function loadMockStudents() {
+    // Mock student data would be loaded here
+    window.mockStudents = [
+        {
+            id: 'student-1',
+            name: 'John Smith',
+            email: 'john.smith@university.edu',
+            submissionDate: '2025-04-09T14:30:00',
+            status: 'pending',
+            submission: {
+                content: 'This is John\'s submission content.',
+                files: [
+                    {
+                        name: 'assignment1.py',
+                        type: 'python',
+                        content: '# Python implementation of a linked list\n\nclass Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nclass LinkedList:\n    def __init__(self):\n        self.head = None\n    \n    def append(self, data):\n        new_node = Node(data)\n        \n        if self.head is None:\n            self.head = new_node\n            return\n        \n        last = self.head\n        while last.next:\n            last = last.next\n        \n        last.next = new_node\n    \n    def print_list(self):\n        current = self.head\n        while current:\n            print(current.data)\n            current = current.next\n\n# Example usage\nif __name__ == "__main__":\n    linked_list = LinkedList()\n    linked_list.append(1)\n    linked_list.append(2)\n    linked_list.append(3)\n    \n    print("Linked List:")\n    linked_list.print_list()'
+                    },
+                    {
+                        name: 'README.md',
+                        type: 'markdown',
+                        content: '# Assignment 1: Data Structures Implementation\n\nThis assignment implements a basic linked list in Python.\n\n## Features\n- Node class with data and next pointer\n- LinkedList class with append and print_list methods\n- Example usage in the main block\n\n## How to Run\n```\npython assignment1.py\n```\n\n## Author\nJohn Smith'
+                    }
+                ]
+            }
+        },
+        {
+            id: 'student-2',
+            name: 'Emily Johnson',
+            email: 'emily.johnson@university.edu',
+            submissionDate: '2025-04-08T09:15:00',
+            status: 'graded',
+            grade: 85,
+            submission: {
+                content: 'This is Emily\'s submission content.',
+                files: [
+                    {
+                        name: 'LinkedList.java',
+                        type: 'java',
+                        content: '// Java implementation of a linked list\n\npublic class LinkedList {\n    Node head;\n    \n    static class Node {\n        int data;\n        Node next;\n        \n        Node(int d) {\n            data = d;\n            next = null;\n        }\n    }\n    \n    public void append(int data) {\n        Node new_node = new Node(data);\n        \n        if (head == null) {\n            head = new_node;\n            return;\n        }\n        \n        Node last = head;\n        while (last.next != null) {\n            last = last.next;\n        }\n        \n        last.next = new_node;\n    }\n    \n    public void printList() {\n        Node current = head;\n        while (current != null) {\n            System.out.print(current.data + " ");\n            current = current.next;\n        }\n    }\n    \n    public static void main(String[] args) {\n        LinkedList linkedList = new LinkedList();\n        \n        linkedList.append(1);\n        linkedList.append(2);\n        linkedList.append(3);\n        \n        System.out.println("Linked List:");\n        linkedList.printList();\n    }\n}'
+                    }
+                ]
+            },
+            feedback: 'Good work on implementing the linked list. Your code is well-structured and follows Java conventions. A few recommendations:\n1. Consider adding comments to explain complex logic\n2. Add error handling for edge cases\n3. Implement additional methods like delete and search'
+        },
+        {
+            id: 'student-3',
+            name: 'Michael Wong',
+            email: 'michael.wong@university.edu',
+            submissionDate: '2025-04-10T23:55:00',
+            status: 'pending',
+            submission: {
+                content: 'This is Michael\'s submission content.',
+                files: [
+                    {
+                        name: 'linked_list.cpp',
+                        type: 'cpp',
+                        content: '// C++ implementation of a linked list\n\n#include <iostream>\nusing namespace std;\n\nclass Node {\npublic:\n    int data;\n    Node* next;\n    \n    Node(int data) {\n        this->data = data;\n        this->next = nullptr;\n    }\n};\n\nclass LinkedList {\nprivate:\n    Node* head;\n    \npublic:\n    LinkedList() {\n        head = nullptr;\n    }\n    \n    void append(int data) {\n        Node* newNode = new Node(data);\n        \n        if (head == nullptr) {\n            head = newNode;\n            return;\n        }\n        \n        Node* last = head;\n        while (last->next != nullptr) {\n            last = last->next;\n        }\n        \n        last->next = newNode;\n    }\n    \n    void display() {\n        Node* current = head;\n        \n        while (current != nullptr) {\n            cout << current->data << " ";\n            current = current->next;\n        }\n        cout << endl;\n    }\n};\n\nint main() {\n    LinkedList list;\n    \n    list.append(1);\n    list.append(2);\n    list.append(3);\n    \n    cout << "Linked List: ";\n    list.display();\n    \n    return 0;\n}'
+                    }
+                ]
+            }
+        }
+    ];
+    
+    // Populate student list
+    updateStudentList();
+}
+
+// Update the student list in the grading modal
+function updateStudentList() {
+    const studentList = document.getElementById('student-list');
+    if (!studentList || !window.mockStudents) return;
+    
+    // Clear existing list
+    studentList.innerHTML = '';
+    
+    // Add students to the list
+    window.mockStudents.forEach((student, index) => {
+        const listItem = document.createElement('li');
+        listItem.className = 'student-item';
+        listItem.setAttribute('data-id', student.id);
+        listItem.setAttribute('data-index', index);
+        
+        // Add status class
+        if (student.status === 'graded') {
+            listItem.classList.add('graded');
+        }
+        
+        listItem.innerHTML = `
+            <div class="student-info">
+                <span class="student-name">${student.name}</span>
+                <span class="student-email">${student.email}</span>
+            </div>
+            <div class="student-status">
+                ${student.status === 'graded' ? 
+                    `<span class="grade-value">${student.grade}/100</span>` : 
+                    '<span class="status-pending">Pending</span>'}
+            </div>
+        `;
+        
+        studentList.appendChild(listItem);
+    });
+    
+    // Setup click events for student list items
+    setupStudentListListeners();
+}
+
+// Setup listeners for the student list
+function setupStudentListListeners() {
+    const studentItems = document.querySelectorAll('.student-item');
+    
+    studentItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove active class from all items
+            studentItems.forEach(i => i.classList.remove('active'));
+            
+            // Add active class to clicked item
+            this.classList.add('active');
+            
+            // Load the student's submission
+            const studentIndex = parseInt(this.getAttribute('data-index'));
+            loadStudentSubmission(studentIndex);
+        });
+    });
+}
+
+// Load a student's submission
+function loadStudentSubmission(studentIndex) {
+    if (!window.mockStudents || !window.mockStudents[studentIndex]) return;
+    
+    const student = window.mockStudents[studentIndex];
+    
+    // Update student header
+    document.getElementById('student-submission-header').textContent = 
+        `${student.name}'s Submission`;
+    
+    // Format submission date
+    const submissionDate = new Date(student.submissionDate);
+    const formattedDate = submissionDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    document.getElementById('submission-timestamp').innerHTML = 
+        `<i class="fas fa-clock"></i> Submitted: ${formattedDate}`;
+    
+    document.getElementById('submission-file-count').innerHTML = 
+        `<i class="fas fa-file"></i> Files: ${student.submission.files.length}`;
+    
+    // Populate file list
+    const fileListContainer = document.getElementById('submission-files');
+    if (fileListContainer) {
+        fileListContainer.innerHTML = '';
+        
+        student.submission.files.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.setAttribute('data-index', index);
+            
+            // Determine file icon based on type
+            let fileIcon = 'fa-file';
+            switch(file.type) {
+                case 'python':
+                    fileIcon = 'fa-file-code';
+                    break;
+                case 'java':
+                    fileIcon = 'fa-file-code';
+                    break;
+                case 'cpp':
+                    fileIcon = 'fa-file-code';
+                    break;
+                case 'markdown':
+                    fileIcon = 'fa-file-alt';
+                    break;
+                case 'pdf':
+                    fileIcon = 'fa-file-pdf';
+                    break;
+                case 'image':
+                    fileIcon = 'fa-file-image';
+                    break;
+            }
+            
+            fileItem.innerHTML = `
+                <i class="fas ${fileIcon}"></i>
+                <span class="file-name">${file.name}</span>
+            `;
+            
+            fileListContainer.appendChild(fileItem);
+            
+            // Add click event to show file preview
+            fileItem.addEventListener('click', function() {
+                const selectedFileIndex = parseInt(this.getAttribute('data-index'));
+                showFilePreview(student, selectedFileIndex);
+                
+                // Add active class to selected file
+                const fileItems = fileListContainer.querySelectorAll('.file-item');
+                fileItems.forEach(item => item.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Select the first file by default
+        if (student.submission.files.length > 0) {
+            const firstFileItem = fileListContainer.querySelector('.file-item');
+            if (firstFileItem) {
+                firstFileItem.classList.add('active');
+                showFilePreview(student, 0);
+            }
+        }
+    }
+    
+    // Update grade if available
+    if (student.status === 'graded' && student.grade !== undefined) {
+        document.getElementById('overall-grade').value = student.grade;
+        document.getElementById('current-grade').textContent = `${student.grade}/100`;
+        
+        if (student.feedback) {
+            document.getElementById('feedback-text').value = student.feedback;
+        } else {
+            document.getElementById('feedback-text').value = '';
+        }
+        
+        document.getElementById('grade-status').textContent = 'Graded';
+        document.getElementById('grade-status').className = 'grade-status graded';
+    } else {
+        document.getElementById('overall-grade').value = 0;
+        document.getElementById('current-grade').textContent = '0/100';
+        document.getElementById('feedback-text').value = '';
+        document.getElementById('grade-status').textContent = 'Not Graded';
+        document.getElementById('grade-status').className = 'grade-status pending';
+    }
+    
+    // Update student list active item
+    const studentItems = document.querySelectorAll('.student-item');
+    studentItems.forEach(item => {
+        item.classList.remove('active');
+        if
+      
+      </script>
+</body>
+</html>
