@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCompete - Coding Contest Platform</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #93c5fd;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--darker);
+            color: var(--light);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--gray-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-light);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notifications {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.6rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--gray);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.2rem;
+        }
+
+        .contest-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .contest-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .contest-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .contest-item.active {
+            background-color: var(--primary);
+        }
+
+        .contest-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-live {
+            background-color: var(--success);
+        }
+
+        .status-upcoming {
+            background-color: var(--warning);
+        }
+
+        .status-ended {
+            background-color: var(--gray);
+        }
+
+        .contest-name {
+            font-size: 0.9rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .leaderboard-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .leaderboard-rank {
+            font-weight: bold;
+            width: 25px;
+        }
+
+        .leaderboard-username {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .leaderboard-score {
+            font-weight: bold;
+            color: var(--primary-light);
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .contest-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contest-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .contest-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .contest-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .contest-timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.2rem;
+            background-color: var(--darker);
+            color: var(--light);
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .timer-value {
+            font-family: monospace;
+            font-size: 1.3rem;
+        }
+
+        .problems-tabs {
+            display: flex;
+            background-color: var(--light);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .problem-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .problem-tab:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        .problem-tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .problem-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--gray-light);
+        }
+
+        .status-solved {
+            background-color: var(--success);
+        }
+
+        .status-attempted {
+            background-color: var(--warning);
+        }
+
+        .problem-difficulty {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            background-color: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .difficulty-easy {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .difficulty-medium {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+
+        .difficulty-hard {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .workspace {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .problem-description {
+            width: 40%;
+            padding: 1.5rem;
+            border-right: 1px solid var(--gray-light);
+            overflow-y: auto;
+        }
+
+        .problem-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .problem-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .problem-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .description-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            line-height: 1.6;
+        }
+
+        .description-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .example {
+            background-color: var(--gray-light);
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre;
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-toolbar {
+            padding: 0.5rem 1rem;
+            background-color: var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .language-selector {
+            padding: 0.5rem;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            background-color: white;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray);
+            color: white;
+        }
+
+        .editor {
+            flex: 1;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            resize: none;
+            border: none;
+            outline: none;
+        }
+
+        .results-panel {
+            height: 200px;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .results-tabs {
+            display: flex;
+            background-color: var(--gray-light);
+        }
+
+        .results-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .results-tab.active {
+            background-color: white;
+        }
+
+        .results-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .test-case {
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--gray);
+            padding-left: 1rem;
+        }
+
+        .test-case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-case-title {
+            font-weight: bold;
+        }
+
+        .test-case-status {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .status-passed {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .status-failed {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .test-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .test-label {
+            color: var(--gray);
+        }
+
+        .submission-result {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: #f0f9ff;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .result-icon {
+            font-size: 1.5rem;
+        }
+
+        .result-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .result-title {
+            font-weight: bold;
+        }
+
+        .result-message {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .result-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90vw;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--gray);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .submission-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .summary-label {
+            color: var(--gray);
+        }
+
+        .summary-value {
+            font-weight: 500;
+        }
+
+        .success-value {
+            color: var(--success);
+        }
+
+        .warning-value {
+            color: var(--warning);
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 1rem;
+            }
+
+            .sidebar-section {
+                min-width: 200px;
+            }
+
+            .workspace {
+                flex-direction: column;
+            }
+
+            .problem-description {
+                width: 100%;
+                height: 300px;
+                border-right: none;
+                border-bottom: 1px solid var(--gray-light);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .contest-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .problems-tabs {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Code<span>Compete</span></div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active">Contests</a>
+            <a href="#" class="nav-link">Practice</a>
+            <a href="#" class="nav-link">Learn</a>
+            <a href="#" class="nav-link">Discuss</a>
+        </div>
+        <div class="user-menu">
+            <div class="notifications">
+                <span class="material-icons">notifications</span>
+                <div class="notification-badge">3</div>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">J</div>
+                <span>JohnDev</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Active Contests</div>
+                <ul class="contest-list">
+                    <li class="contest-item active">
+                        <div class="contest-status status-live"></div>
+                        <div class="contest-name">Weekly Challenge #42</div>
+                    </li>
+                    <li class="contest-item">
+                        <div class="contest-status status-upcoming"></div>
+                        <div class="contest-name">CodeCup April 2025</div>
+                    </li>
+                    <li class="contest-item">
+                        <div class="contest-status status-upcoming"></div>
+                        <div class="contest-name">Hackathon Finals</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">My Recent Contests</div>
+                <ul class="contest-list">
+                    <li class="contest-item">
+                        <div class="contest-status status-ended"></div>
+                        <div class="contest-name">Weekly Challenge #41</div>
+                    </li>
+                    <li class="contest-item">
+                        <div class="contest-status status-ended"></div>
+                        <div class="contest-name">Spring Code Jam</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Leaderboard</div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">1</div>
+                    <div class="leaderboard-username">codemaster99</div>
+                    <div class="leaderboard-score">450</div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">2</div>
+                    <div class="leaderboard-username">algorithmking</div>
+                    <div class="leaderboard-score">425</div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">3</div>
+                    <div class="leaderboard-username">devninja</div>
+                    <div class="leaderboard-score">410</div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">4</div>
+                    <div class="leaderboard-username">JohnDev</div>
+                    <div class="leaderboard-score">380</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="contest-header">
+                <div class="contest-info">
+                    <div class="contest-title">Weekly Challenge #42</div>
+                    <div class="contest-meta">
+                        <span>5 Problems</span>
+                        <span>120 Participants</span>
+                        <span>Difficulty: Medium</span>
+                    </div>
+                </div>
+                <div class="contest-timer">
+                    <span>Time Remaining:</span>
+                    <div class="timer-value" id="contest-timer">01:45:30</div>
+                </div>
+            </div>
+
+            <div class="problems-tabs">
+                <div class="problem-tab active">
+                    <div class="problem-status"></div>
+                    <span>A. Two Sum</span>
+                    <div class="problem-difficulty difficulty-easy">Easy</div>
+                </div>
+                <div class="problem-tab">
+                    <div class="problem-status"></div>
+                    <span>B. Valid Parentheses</span>
+                    <div class="problem-difficulty difficulty-easy">Easy</div>
+                </div>
+                <div class="problem-tab">
+                    <div class="problem-status status-attempted"></div>
+                    <span>C. Linked List Cycle</span>
+                    <div class="problem-difficulty difficulty-medium">Medium</div>
+                </div>
+                <div class="problem-tab">
+                    <div class="problem-status"></div>
+                    <span>D. Binary Tree Paths</span>
+                    <div class="problem-difficulty difficulty-medium">Medium</div>
+                </div>
+                <div class="problem-tab">
+                    <div class="problem-status"></div>
+                    <span>E. Trapping Rain Water</span>
+                    <div class="problem-difficulty difficulty-hard">Hard</div>
+                </div>
+            </div>
+
+            <div class="workspace">
+                <div class="problem-description">
+                    <div class="problem-title">A. Two Sum</div>
+                    <div class="problem-stats">
+                        <div class="problem-stat">
+                            <span>Acceptance: 75%</span>
+                        </div>
+                        <div class="problem-stat">
+                            <span>Submissions: 312</span>
+                        </div>
+                        <div class="problem-stat">
+                            <span>Points: 100</span>
+                        </div>
+                    </div>
+
+                    <div class="description-content">
+                        <div class="description-section">
+                            <div class="section-title">Problem Description</div>
+                            <p>
+                                Given an array of integers <code>nums</code> and an integer <code>target</code>, return the indices of two numbers such that they add up to the <code>target</code>.
+                            </p>
+                            <p>
+                                You may assume that each input would have exactly one solution, and you may not use the same element twice.
+                            </p>
+                            <p>
+                                You can return the answer in any order.
+                            </p>
+                        </div>
+
+                        <div class="description-section">
+                            <div class="section-title">Example 1:</div>
+                            <div class="example">
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+                            </div>
+                        </div>
+
+                        <div class="description-section">
+                            <div class="section-title">Example 2:</div>
+                            <div class="example">
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+                            </div>
+                        </div>
+
+                        <div class="description-section">
+                            <div class="section-title">Example 3:</div>
+                            <div class="example">
+Input: nums = [3,3], target = 6
+Output: [0,1]
+                            </div>
+                        </div>
+
+                        <div class="description-section">
+                            <div class="section-title">Constraints:</div>
+                            <ul>
+                                <li>2 ≤ nums.length ≤ 10<sup>4</sup></li>
+                                <li>-10<sup>9</sup> ≤ nums[i] ≤ 10<sup>9</sup></li>
+                                <li>-10<sup>9</sup> ≤ target ≤ 10<sup>9</sup></li>
+                                <li>Only one valid answer exists.</li>
+                            </ul>
+                        </div>
+
+                        <div class="description-section">
+                            <div class="section-title">Follow-up:</div>
+                            <p>Can you come up with an algorithm that is less than O(n²) time complexity?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="editor-container">
+                    <div class="editor-toolbar">
+                        <select class="language-selector">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                            <option value="cpp">C++</option>
+                        </select>
+                        <div class="editor-actions">
+                            <button class="btn-secondary" id="run-tests-btn">Run Tests</button>
+                            <button class="btn-primary" id="submit-btn">Submit</button>
+                        </div>
+                    </div>
+
+                    <textarea class="editor" id="code-editor">/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+function twoSum(nums, target) {
+    // Write your solution here
+    
+}</textarea>
+
+                    <div class="results-panel">
+                        <div class="results-tabs">
+                            <div class="results-tab active" data-tab="test-cases">Test Cases</div>
+                            <div class="results-tab" data-tab="console">Console</div>
+                            <div class="results-tab" data-tab="submissions">Submissions</div>
+                        </div>
+                        <div class="results-content" id="results-content">
+                            <div class="test-case">
+                                <div class="test-case-header">
+                                    <div class="test-case-title">Example Test Case 1</div>
+                                    <div class="test-case-status status-passed">Passed</div>
+                                </div>
+                                <div class="test-details">
+                                    <div>
+                                        <span class="test-label">Input:</span> nums = [2,7,11,15], target = 9
+                                    </div>
+                                    <div>
+                                        <span class="test-label">Expected Output:</span> [0,1]
+                                    </div>
+                                    <div>
+                                        <span class="test-label">Your Output:</span> [0,1]
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="test-case">
+                                <div class="test-case-header">
+                                    <div class="test-case-title">Example Test Case 2</div>
+                                    <div class="test-case-status status-passed">Passed</div>
+                                </div>
+                                <div class="test-details">
+                                    <div>
+                                        <span class="test-label">Input:</span> nums = [3,2,4], target = 6
+                                    </div>
+                                    <div>
+                                        <span class="test-label">Expected Output:</span> [1,2]
+                                    </div>
+                                    <div>
+                                        <span class="test-label">Your Output:</span> [1,2]
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="test-case">
+                                <div class="test-case-header">
+                                    <div class="test-case-title">Example Test Case 3</div>
+                                    <div class="test-case-status status-passed">Passed</div>
+                                </div>
+                                <div class="test-details">
+                                    <div>
+                                        <span class="test-label">Input:</span> nums = [3,3], target = 6
+                                    </div>
+                                    <div>
+                                        <span class="test-label">Expected Output:</span> [0,1]
+                                    </div>
+                                    <div>
+                                        <span class="test-label">Your Output:</span> [0,1]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="submission-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Submission Result</div>
+                <div class="modal-close">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="submission-result">
+                    <div class="result-icon">✅</div>
+                    <div class="result-details">
+                        <div class="result-title">All Test Cases Passed!</div>
+                        <div class="result-message">Your solution passed all test cases. Great job!</div>
+                        <div class="result-stats">
+                            <span>Runtime: 72 ms (faster than 85% of submissions)</span>
+                            <span>Memory: 42.1 MB (less than 66% of submissions)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="submission-summary">
+                    <div class="summary-item">
+                        <div class="summary-label">Problem</div>
+                        <div class="summary-value">A. Two Sum</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Status</div>

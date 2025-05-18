@@ -1,0 +1,210 @@
+<div class="calendar-container">
+    <style>
+      .calendar-container {
+        font-family: Verdana, sans-serif;
+        max-width: 700px;
+        margin: auto;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+  
+      .calendar-container ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+  
+      .calendar-container .month {
+        padding: 40px 25px;
+        background: #1abc9c;
+        text-align: center;
+        color: white;
+      }
+  
+      .calendar-container .month ul {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+  
+      .calendar-container .month ul li {
+        font-size: 20px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+      }
+  
+      .calendar-container .month .prev,
+      .calendar-container .month .next {
+        cursor: pointer;
+        font-size: 24px;
+      }
+  
+      .calendar-container .weekdays {
+        background-color: #ddd;
+        display: flex;
+      }
+  
+      .calendar-container .weekdays li {
+        flex: 1;
+        text-align: center;
+        padding: 10px 0;
+        color: #666;
+      }
+  
+      .calendar-container .days {
+        background: #eee;
+        display: flex;
+        flex-wrap: wrap;
+      }
+  
+      .calendar-container .days li {
+        flex: 1 0 14.28%;
+        text-align: center;
+        padding: 10px 0;
+        color: #777;
+        box-sizing: border-box;
+      }
+  
+      .calendar-container .days li .active {
+        display: inline-block;
+        padding: 5px;
+        background: #1abc9c;
+        color: white;
+        border-radius: 50%;
+      }
+  
+      .calendar-container .days li.event-day {
+        background-color: #f9c74f;
+        border-radius: 50%;
+        color: #000;
+      }
+  
+      .calendar-container .event-legend {
+        padding: 10px;
+        background: #f9f9f9;
+        font-size: 14px;
+        color: #333;
+      }
+  
+      .calendar-container .event-legend span {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background-color: #f9c74f;
+        margin-right: 5px;
+        border-radius: 50%;
+      }
+    </style>
+  
+    <div class="month">
+      <ul>
+        <li class="prev" onclick="prevMonth()">&#10094;</li>
+        <li id="monthYear">April<br><span style="font-size:18px">2025</span></li>
+        <li class="next" onclick="nextMonth()">&#10095;</li>
+      </ul>
+    </div>
+  
+    <ul class="weekdays">
+      <li>Mo</li>
+      <li>Tu</li>
+      <li>We</li>
+      <li>Th</li>
+      <li>Fr</li>
+      <li>Sa</li>
+      <li>Su</li>
+    </ul>
+  
+    <ul class="days" id="calendarDays">
+      <!-- Days will be populated by JavaScript -->
+    </ul>
+  
+    <div class="event-legend">
+      <span></span> Academic Event
+    </div>
+  
+    <script>
+      const monthYear = document.getElementById('monthYear');
+      const calendarDays = document.getElementById('calendarDays');
+  
+      const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+  
+      let currentDate = new Date();
+      let currentMonth = currentDate.getMonth();
+      let currentYear = currentDate.getFullYear();
+  
+      // Define academic events: keys are in 'YYYY-MM-DD' format
+      const academicEvents = {
+        "2025-04-15": "Midterm Exams",
+        "2025-05-01": "Labor Day",
+        "2025-06-10": "Semester End",
+        // Add more events as needed
+      };
+  
+      function renderCalendar(month, year) {
+        calendarDays.innerHTML = '';
+  
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+  
+        // Adjusting for Monday as the first day
+        const startDay = (firstDay === 0) ? 6 : firstDay - 1;
+  
+        monthYear.innerHTML = `${months[month]}<br><span style="font-size:18px">${year}</span>`;
+  
+        // Add blank days for the first week
+        for (let i = 0; i < startDay; i++) {
+          const blankDay = document.createElement('li');
+          calendarDays.appendChild(blankDay);
+        }
+  
+        // Add days of the month
+        for (let i = 1; i <= daysInMonth; i++) {
+          const day = document.createElement('li');
+          const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+  
+          if (academicEvents[dateKey]) {
+            day.classList.add('event-day');
+            day.title = academicEvents[dateKey];
+          }
+  
+          if (
+            i === currentDate.getDate() &&
+            year === currentDate.getFullYear() &&
+            month === currentDate.getMonth()
+          ) {
+            const span = document.createElement('span');
+            span.classList.add('active');
+            span.textContent = i;
+            day.appendChild(span);
+          } else {
+            day.textContent = i;
+          }
+          calendarDays.appendChild(day);
+        }
+      }
+  
+      function prevMonth() {
+        currentMonth--;
+        if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        renderCalendar(currentMonth, currentYear);
+      }
+  
+      function nextMonth() {
+        currentMonth++;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        renderCalendar(currentMonth, currentYear);
+      }
+  
+      renderCalendar(currentMonth, currentYear);
+    </script>
+  </div>
+  

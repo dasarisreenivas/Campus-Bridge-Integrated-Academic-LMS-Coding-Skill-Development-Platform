@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tech Course Assignments</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        background: linear-gradient(to bottom right, #f8fafc, #f1f5f9);
+        min-height: 100vh;
+        padding: 4rem 1rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        color: #1e293b;
+        margin-bottom: 1rem;
+      }
+
+      .subtitle {
+        font-size: 1.25rem;
+        color: #64748b;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .tab-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .tab-button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s ease;
+      }
+
+      .tab-button.active {
+        background: #4f46e5;
+        color: white;
+      }
+
+      .tab-button:not(.active) {
+        background: white;
+        color: #4b5563;
+      }
+
+      .tab-button:not(.active):hover {
+        background: #f9fafb;
+      }
+
+      .assignments-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 0 1rem;
+      }
+
+      .assignment-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
+      }
+
+      .assignment-card:hover {
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-content {
+        padding: 2rem;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .icon {
+        background: #eef2ff;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .not-started {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .in-progress {
+        background: #fef9c3;
+        color: #854d0e;
+      }
+
+      .completed {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .assignment-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+
+      .assignment-description {
+        color: #64748b;
+        margin-bottom: 1rem;
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .meta-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .due-date, .points {
+        font-size: 0.875rem;
+        color: #64748b;
+      }
+
+      .submit-button {
+        background: #4f46e5;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+      }
+
+      .submit-button:hover {
+        background: #4338ca;
+      }
+
+      /* New styles for tab content */
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      /* Modal styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal {
+        background: white;
+        border-radius: 1rem;
+        width: 90%;
+        max-width: 600px;
+        padding: 2rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        transform: translateY(-20px);
+        transition: transform 0.3s ease;
+      }
+
+      .modal-overlay.active .modal {
+        transform: translateY(0);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #64748b;
+      }
+
+      .modal-body {
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+      }
+
+      .modal-button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+      }
+
+      .cancel-button {
+        background: #e2e8f0;
+        color: #475569;
+      }
+
+      .confirm-button {
+        background: #4f46e5;
+        color: white;
+      }
+
+      /* Courses tab content */
+      .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 0 1rem;
+      }
+
+      .course-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .course-image {
+        height: 160px;
+        background-color: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .course-content {
+        padding: 1.5rem;
+      }
+
+      .course-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+
+      .course-description {
+        color: #64748b;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+      }
+
+      .course-meta {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 1rem;
+        margin-top: 1rem;
+        font-size: 0.875rem;
+      }
+
+      .course-progress {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #64748b;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: #e2e8f0;
+        border-radius: 2px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #4f46e5;
+      }
+
+      /* Toast notification */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: #1e293b;
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transform: translateY(150%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+      }
+
+      .toast.active {
+        transform: translateY(0);
+      }
+
+      .toast-icon {
+        font-size: 1.25rem;
+      }
+
+      /* File upload styles */
+      .file-upload-container {
+        margin-top: 1.5rem;
+        border: 2px dashed #e2e8f0;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: border-color 0.3s ease;
+      }
+
+      .file-upload-container.dragover {
+        border-color: #4f46e5;
+        background-color: #f5f8ff;
+      }
+
+      .file-upload-icon {
+        font-size: 2.5rem;
+        color: #64748b;
+        margin-bottom: 1rem;
+      }
+
+      .file-upload-text {
+        color: #64748b;
+        margin-bottom: 1rem;
+      }
+
+      .file-upload-input {
+        display: none;
+      }
+
+      .file-upload-button {
+        background: #e2e8f0;
+        color: #475569;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+      }
+
+      .file-upload-button:hover {
+        background: #cbd5e1;
+      }
+
+      .file-info {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f8fafc;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .file-icon {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+        color: #64748b;
+      }
+
+      .file-details {
+        flex: 1;
+        text-align: left;
+      }
+
+      .file-name {
+        font-weight: 500;
+        color: #1e293b;
+      }
+
+      .file-size {
+        font-size: 0.75rem;
+        color: #64748b;
+      }
+
+      .file-remove {
+        color: #ef4444;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.25rem;
+      }
+
+      .files-list {
+        margin-top: 1rem;
+      }
+      
+      /* Upload indicator */
+      .upload-indicator {
+        margin-top: 1rem;
+        text-align: center;
+      }
+      
+      .upload-progress {
+        height: 4px;
+        width: 100%;
+        background-color: #e2e8f0;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+      }
+      
+      .upload-progress-fill {
+        height: 100%;
+        background-color: #4f46e5;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+      
+      .upload-status {
+        font-size: 0.875rem;
+        color: #64748b;
+      }
+      
+      /* Upload card */
+      .upload-card {
+        display: flex;
+        justify-content: space-between;
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        padding: 0.75rem 1rem;
+        margin-top: 0.5rem;
+      }
+      
+      .upload-card-icon {
+        color: #64748b;
+        margin-right: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Course Assignments</h1>
+        <p class="subtitle">Track your progress and submit your assignments for our comprehensive tech courses</p>
+        <div class="tab-buttons">
+          <button class="tab-button" data-tab="courses">Courses</button>
+          <button class="tab-button active" data-tab="assignments">Assignments</button>
+        </div>
+      </header>
+
+      <div id="courses" class="tab-content">
+        <div class="courses-grid">
+          <div class="course-card">
+            <div class="course-image">
+              <div style="font-size: 3rem;">💻</div>
+            </div>
+            <div class="course-content">
+              <h2 class="course-title">Data Structures & Algorithms</h2>
+              <p class="course-description">Learn fundamental data structures and algorithms with practical implementations.</p>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 65%"></div>
+              </div>
+              <div class="course-meta">
+                <span class="course-progress">Progress: 65%</span>
+                <span>12/20 modules</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-image">
+              <div style="font-size: 3rem;">🗄️</div>
+            </div>
+            <div class="course-content">
+              <h2 class="course-title">Database Systems</h2>
+              <p class="course-description">Master SQL, NoSQL databases and learn database design principles.</p>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
+              </div>
+              <div class="course-meta">
+                <span class="course-progress">Progress: 40%</span>
+                <span>8/18 modules</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-image">
+              <div style="font-size: 3rem;">🌐</div>
+            </div>
+            <div class="course-content">
+              <h2 class="course-title">Web Development</h2>
+              <p class="course-description">Create responsive websites with HTML, CSS, and JavaScript.</p>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 90%"></div>
+              </div>
+              <div class="course-meta">
+                <span class="course-progress">Progress: 90%</span>
+                <span>18/20 modules</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-image">
+              <div style="font-size: 3rem;">⚛️</div>
+            </div>
+            <div class="course-content">
+              <h2 class="course-title">React Development</h2>
+              <p class="course-description">Build modern web applications with React and state management.</p>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 10%"></div>
+              </div>
+              <div class="course-meta">
+                <span class="course-progress">Progress: 10%</span>
+                <span>2/15 modules</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="assignments" class="tab-content active">
+        <div class="assignments-grid">
+          <div class="assignment-card">
+            <div class="card-content">
+              <div class="card-header">
+                <div class="icon">📊</div>
+                <span class="status not-started">Not Started</span>
+              </div>
+              <h2 class="assignment-title">Binary Search Implementation</h2>
+              <p class="assignment-description">Implement a binary search algorithm with time complexity analysis.</p>
+              <div class="card-footer">
+                <div class="meta-info">
+                  <span class="due-date">Due: April 15, 2024</span>
+                  <span class="points">Points: 100</span>
+                </div>
+                <button class="submit-button" data-action="start" data-assignment="Binary Search Implementation">Start Assignment</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="assignment-card">
+            <div class="card-content">
+              <div class="card-header">
+                <div class="icon">💾</div>
+                <span class="status in-progress">In Progress</span>
+              </div>
+              <h2 class="assignment-title">Database Schema Design</h2>
+              <p class="assignment-description">Design a normalized database schema for an e-commerce platform.</p>
+              <div class="card-footer">
+                <div class="meta-info">
+                  <span class="due-date">Due: April 20, 2024</span>
+                  <span class="points">Points: 150</span>
+                </div>
+                <button class="submit-button" data-action="continue" data-assignment="Database Schema Design">Continue</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="assignment-card">
+            <div class="card-content">
+              <div class="card-header">
+                <div class="icon">🌐</div>
+                <span class="status completed">Completed</span>
+              </div>
+              <h2 class="assignment-title">Responsive Portfolio</h2>
+              <p class="assignment-description">Create a responsive portfolio website using HTML5 and CSS3.</p>
+              <div class="card-footer">
+                <div class="meta-info">
+                  <span class="due-date">Due: April 18, 2024</span>
+                  <span class="points">Points: 120</span>
+                </div>
+                <button class="submit-button" data-action="view" data-assignment="Responsive Portfolio">View Submission</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="assignment-card">
+            <div class="card-content">
+              <div class="card-header">
+                <div class="icon">🐍</div>
+                <span class="status not-started">Not Started</span>
+              </div>
+              <h2 class="assignment-title">Python Data Analysis</h2>
+              <p class="assignment-description">Analyze and visualize dataset using Python libraries.</p>
+              <div class="card-footer">
+                <div class="meta-info">
+                  <span class="due-date">Due: April 25, 2024</span>
+                  <span class="points">Points: 130</span>
+                </div>
+                <button class="submit-button" data-action="start" data-assignment="Python Data Analysis">Start Assignment</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="assignment-card">
+            <div class="card-content">
+              <div class="card-header">
+                <div class="icon">⚡</div>
+                <span class="status in-progress">In Progress</span>
+              </div>
+              <h2 class="assignment-title">AVL Tree Implementation</h2>
+              <p class="assignment-description">Implement a self-balancing AVL tree with rotations.</p>
+              <div class="card-footer">
+                <div class="meta-info">
+                  <span class="due-date">Due: April 22, 2024</span>
+                  <span class="points">Points: 180</span>
+                </div>
+                <button class="submit-button" data-action="continue" data-assignment="AVL Tree Implementation">Continue</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="assignment-card">
+            <div class="card-content">
+              <div class="card-header">
+                <div class="icon">⚛️</div>
+                <span class="status not-started">Not Started</span>
+              </div>
+              <h2 class="assignment-title">React State Management</h2>
+              <p class="assignment-description">Build a task management app using React and state management.</p>
+              <div class="card-footer">
+                <div class="meta-info">
+                  <span class="due-date">Due: April 28, 2024</span>
+                  <span class="points">Points: 150</span>
+                </div>
+                <button class="submit-button" data-action="start" data-assignment="React State Management">Start Assignment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="assignmentModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">Assignment Title</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Content will be dynamically populated -->
+        </div>
+        <div class="modal-footer">
+          <button class="modal-button cancel-button" id="cancelButton">Cancel</button>
+          <button class="modal-button confirm-button" id="confirmButton">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">
+      <span class="toast-icon">✓</span>
+      <span id="toastMessage">Assignment status updated!</span>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+  // DOM Elements
+  const tabButtons = document.querySelectorAll('.tab-button');
+  const tabContents = document.querySelectorAll('.tab-content');
+  const submitButtons = document.querySelectorAll('.submit-button');
+  const modalOverlay = document.getElementById('assignmentModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.getElementById('modalBody');
+  const closeModalButton = document.querySelector('.close-modal');
+  const cancelButton = document.getElementById('cancelButton');
+  const confirmButton = document.getElementById('confirmButton');
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toastMessage');
+  
+  // Current active assignment for modal context
+  let currentAssignment = null;
+  let currentAction = null;
+  
+  // Tab switching functionality
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const tabName = button.getAttribute('data-tab');
+      
+      // Update active button
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      
+      // Update active tab content
+      tabContents.forEach(content => {
+        if (content.id === tabName) {
+          content.classList.add('active');
+        } else {
+          content.classList.remove('active');
+        }
+      });
+    });
+  });
+  
+  // Assignment button click handlers
+  submitButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const action = button.getAttribute('data-action');
+      const assignmentName = button.getAttribute('data-assignment');
+      
+      // Store context for modal
+      currentAssignment = assignmentName;
+      currentAction = action;
+      
+      // Set modal title
+      modalTitle.textContent = assignmentName;
+      
+      // Populate modal body based on action
+      populateModalBody(action, assignmentName);
+      
+      // Show modal
+      modalOverlay.classList.add('active');
+    });
+  });
+  
+  // Close modal functions
+  function closeModal() {
+    modalOverlay.classList.remove('active');
+    // Clear file uploads if any
+    if (modalBody.querySelector('.files-list')) {
+      modalBody.querySelector('.files-list').innerHTML = '';
+    }
+  }
+  
+  closeModalButton.addEventListener('click', closeModal);
+  cancelButton.addEventListener('click', closeModal);
+  
+  // Close modal when clicking outside
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) {
+      closeModal();
+    }
+  });
+  
+  // Populate modal content based on action
+  function populateModalBody(action, assignmentName) {
+    modalBody.innerHTML = '';
+    
+    switch(action) {
+      case 'start':
+        modalBody.innerHTML = `
+          <p>You're about to start the "${assignmentName}" assignment. Once you start, the due date will apply.</p>
+          <p>Would you like to continue?</p>
+        `;
+        confirmButton.textContent = 'Start Assignment';
+        break;
+        
+      case 'continue':
+        modalBody.innerHTML = `
+          <p>Continue working on "${assignmentName}"</p>
+          <div class="file-upload-container" id="dropArea">
+            <div class="file-upload-icon">📁</div>
+            <p class="file-upload-text">Drag and drop files here or click to select</p>
+            <input type="file" id="fileInput" class="file-upload-input" multiple>
+            <button class="file-upload-button" id="browseButton">Browse Files</button>
+          </div>
+          <div class="files-list" id="filesList"></div>
+        `;
+        confirmButton.textContent = 'Save Progress';
+        
+        // Setup file upload functionality
+        setupFileUpload();
+        break;
+        
+      case 'view':
+        modalBody.innerHTML = `
+          <p>Submission for "${assignmentName}"</p>
+          <div class="upload-card">
+            <div>
+              <span class="upload-card-icon">📄</span>
+              <span>portfolio-final.zip</span>
+            </div>
+            <span>Submitted Apr 10, 2024</span>
+          </div>
+          <div class="upload-card">
+            <div>
+              <span class="upload-card-icon">📄</span>
+              <span>design-mockups.pdf</span>
+            </div>
+            <span>Submitted Apr 10, 2024</span>
+          </div>
+          <div class="upload-indicator">
+            <div class="upload-progress">
+              <div class="upload-progress-fill" style="width: 100%;"></div>
+            </div>
+            <p class="upload-status">Grade: 115/120 points</p>
+          </div>
+        `;
+        confirmButton.textContent = 'Close';
+        break;
+    }
+  }
+  
+  // File upload functionality
+  function setupFileUpload() {
+    const dropArea = document.getElementById('dropArea');
+    const fileInput = document.getElementById('fileInput');
+    const browseButton = document.getElementById('browseButton');
+    const filesList = document.getElementById('filesList');
+    
+    // Trigger file input when browse button is clicked
+    browseButton.addEventListener('click', () => {
+      fileInput.click();
+    });
+    
+    // Handle file selection
+    fileInput.addEventListener('change', handleFiles);
+    
+    // Drag and drop events
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropArea.addEventListener(eventName, () => {
+        dropArea.classList.add('dragover');
+      }, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, () => {
+        dropArea.classList.remove('dragover');
+      }, false);
+    });
+    
+    dropArea.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      handleFiles({ target: { files } });
+    }, false);
+    
+    function handleFiles(e) {
+      const files = e.target.files;
+      
+      if (files.length === 0) return;
+      
+      for (let i = 0; i < files.length; i++) {
+        addFileToList(files[i]);
+      }
+      
+      // Clear the input to allow selecting the same file again
+      fileInput.value = '';
+    }
+    
+    function addFileToList(file) {
+      const fileInfo = document.createElement('div');
+      fileInfo.className = 'file-info';
+      
+      // Format file size
+      const fileSize = formatFileSize(file.size);
+      
+      fileInfo.innerHTML = `
+        <div class="file-icon">📄</div>
+        <div class="file-details">
+          <div class="file-name">${file.name}</div>
+          <div class="file-size">${fileSize}</div>
+        </div>
+        <button class="file-remove" data-filename="${file.name}">×</button>
+      `;
+      
+      filesList.appendChild(fileInfo);
+      
+      // Add remove button functionality
+      const removeButton = fileInfo.querySelector('.file-remove');
+      removeButton.addEventListener('click', () => {
+        fileInfo.remove();
+      });
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' bytes';
+      else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      else return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+  }
+  
+  // Confirm button functionality
+  confirmButton.addEventListener('click', () => {
+    if (!currentAssignment || !currentAction) return;
+    
+    let message = '';
+    let cardToUpdate = null;
+    
+    // Find the assignment card to update
+    document.querySelectorAll('.assignment-card').forEach(card => {
+      const title = card.querySelector('.assignment-title').textContent;
+      if (title === currentAssignment) {
+        cardToUpdate = card;
+      }
+    });
+    
+    if (!cardToUpdate) {
+      closeModal();
+      return;
+    }
+    
+    // Update based on action
+    switch(currentAction) {
+      case 'start':
+        // Update status to in-progress
+        const statusLabel = cardToUpdate.querySelector('.status');
+        statusLabel.className = 'status in-progress';
+        statusLabel.textContent = 'In Progress';
+        
+        // Update button
+        const button = cardToUpdate.querySelector('.submit-button');
+        button.setAttribute('data-action', 'continue');
+        button.textContent = 'Continue';
+        
+        message = `You've started the "${currentAssignment}" assignment`;
+        break;
+        
+      case 'continue':
+        // Check if files were uploaded
+        const filesList = document.getElementById('filesList');
+        const filesCount = filesList ? filesList.children.length : 0;
+        
+        message = filesCount > 0 
+          ? `Progress saved for "${currentAssignment}" (${filesCount} files uploaded)`
+          : `Progress saved for "${currentAssignment}"`;
+        break;
+        
+      case 'view':
+        // Just close the modal
+        closeModal();
+        return;
+    }
+    
+    // Show toast notification
+    toastMessage.textContent = message;
+    toast.classList.add('active');
+    
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+      toast.classList.remove('active');
+    }, 3000);
+    
+    closeModal();
+  });
+});
+    </script>

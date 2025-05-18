@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Bridge - Learning Paths</title>
+    <style>
+        :root {
+            --primary-color: #3a6ea5;
+            --secondary-color: #5d9bc7;
+            --accent-color: #ff7e5f;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --light-text: #f8f9fa;
+            --border-color: #dee2e6;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            margin-right: 8px;
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1rem;
+            font-weight: bold;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 68px;
+            left: 0;
+            bottom: 0;
+            width: 240px;
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            overflow-y: auto;
+            z-index: 900;
+        }
+        
+        .sidebar-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .sidebar-group-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #666;
+            padding: 0.5rem 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: rgba(93, 155, 199, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .sidebar-icon {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 240px;
+            margin-top: 68px;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .search-input {
+            border: none;
+            outline: none;
+            padding: 0.3rem;
+            width: 200px;
+        }
+        
+        .filter-dropdown {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .paths-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .path-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .path-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .path-header {
+            position: relative;
+            height: 140px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .path-difficulty {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(0,0,0,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .path-content {
+            padding: 1.5rem;
+        }
+        
+        .path-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .path-desc {
+            color: #666;
+            margin-bottom: 1rem;
+            height: 60px;
+            overflow: hidden;
+        }
+        
+        .path-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .path-progress {
+            margin-top: 0.5rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+        }
+        
+        .path-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .path-tags {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .path-tag {
+            background-color: rgba(93, 155, 199, 0.1);
+            color: var(--primary-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .continue-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .continue-btn:hover {
+            background-color: #e56e50;
+        }
+        
+        .categories-section {
+            margin-bottom: 2rem;
+        }
+        
+        .categories-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .category-card {
+            background-color: white;
+            border-radius: 8px;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            color: var(--primary-color);
+        }
+        
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-name {
+            font-weight: 500;
+        }
+        
+        .path-details-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .path-details-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .path-details-modal {
+            background-color: white;
+            border-radius: 8px;
+            width: 800px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .path-details-header {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+        
+        .path-details-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .path-details-title h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .path-details-meta {
+            display: flex;
+            gap: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .path-overview {
+            margin-bottom: 2rem;
+        }
+        
+        .overview-title, .modules-title, .skills-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .module-item {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .module-item:hover {
+            background-color: rgba(93, 155, 199, 0.05);
+        }
+        
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .module-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .module-icon {
+            margin-right: 0.5rem;
+        }
+        
+        .module-toggle {
+            font-size: 1.2rem;
+        }
+        
+        .module-content {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: none;
+        }
+        
+        .module-content.active {
+            display: block;
+        }
+        
+        .topic-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+        
+        .topic-name {
+            display: flex;
+            align-items: center;
+        }
+        
+        .topic-icon {
+            margin-right: 0.5rem;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(93, 155, 199, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.75rem;
+        }
+        
+        .topic-time {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        
+        .skill-item {
+            background-color: rgba(93, 155, 199, 0.1);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .path-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .action-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .primary-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background-color: #e56e50;
+        }
+        
+        .secondary-btn {
+            background-color: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .secondary-btn:hover {
+            background-color: rgba(255, 126, 95, 0.1);
+        }
+        
+        .ai-assistant {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-assistant:hover {
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .main-content {
+                margin-left: 200px;
+            }
+            
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .paths-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.8rem 1rem;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .path-details-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .paths-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">🌉</span>
+            <span>Campus Bridge</span>
+        </div>
+        <!-- <ul class="nav-links">
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="#academic">Academic</a></li>
+            <li><a href="#coding">Coding Studio</a></li>
+            <li><a href="#analytics">Analytics</a></li>
+            <li><a href="#community">Community</a></li>
+        </ul> -->
+        <div class="user-menu">
+            <span>Sarah Johnson</span>
+            <div class="user-avatar">SJ</div>
+        </div>
+    </nav>
+    
+    <aside class="sidebar">
+        <div class="sidebar-group">
+            <div class="sidebar-group-title">Student Portal</div>
+            <a href="index.html" class="sidebar-link">
+                <span class="sidebar-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#courses" class="sidebar-link">
+                <span class="sidebar-icon">📚</span>
+                <span>My Courses</span>
+            </a>
+            <a href="#attendance" class="sidebar-link">
+                <span class="sidebar-icon">📝</span>
+                <span>Attendance</span>
+            </a>
+            <a href="#assignments" class="sidebar-link">
+                <span class="sidebar-icon">📄</span>
+                <span>Assignments</span>
+            </a>
+            <a href="#grades" class="sidebar-link">
+                <span class="sidebar-icon">🏆</span>
+                <span>Grades</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-group">
+            <div class="sidebar-group-title">Coding Studio</div>
+            <a href="#code-playground" class="sidebar-link">
+                <span class="sidebar-icon">💻</span>
+                <span>Code Playground</span>
+            </a>
+            <a href="learning-paths.html" class="sidebar-link active">
+                <span class="sidebar-icon">🛤</span>
+                <span>Learning Paths</span>
+            </a>
+            <a href="#problems" class="sidebar-link">
+                <span class="sidebar-icon">🧩</span>
+                <span>Problem Sets</span>
+            </a>
+            <a href="#code-rooms" class="sidebar-link">
+                <span class="sidebar-icon">👥</span>
+                <span>Group Code Rooms</span>
+            </a>
+            <a href="#contests" class="sidebar-link">
+                <span class="sidebar-icon">🏅</span>
+                <span>Coding Contests</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-group">
+            <div class="sidebar-group-title">Career Prep</div>
+            <a href="#job-match" class="sidebar-link">
+                <span class="sidebar-icon">🔍</span>
+                <span>Job Matching</span>
+            </a>
+            <a href="#resume" class="sidebar-link">
+                <span class="sidebar-icon">📋</span>
+                <span>Resume Builder</span>
+            </a>
+            <a href="#portfolio" class="sidebar-link">
+                <span class="sidebar-icon">🌟</span>
+                <span>Portfolio</span>
+            </a>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Learning Paths</h1>
+                <div class="search-filter">
+                    <div class="search-bar">
+                        <span>🔍</span>
+                        <input type="text" class="search-input" placeholder="Search paths...">
+                    </div>
+                    <select class="filter-dropdown">
+                        <option>All Levels</option>
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                    <select class="filter-dropdown">
+                        <option>All Languages</option>
+                        <option>Python</option>
+                        <option>JavaScript</option>
+                        <option>Java</option>
+                        <option>C++</option>
+                        <option>SQL</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="categories-section">
+                <h2 class="categories-title">Explore By Category</h2>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <div class="category-icon">🐍</div>
+                        <div class="category-name">Python</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🌟</div>
+                        <div class="category-name">JavaScript</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">☕</div>
+                        <div class="category-name">Java</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">⚙</div>
+                        <div class="category-name">C++</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🅰</div>
+                        <div class="category-name">Algorithms</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🧠</div>
+                        <div class="category-name">AI/ML</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🌐</div>
+                        <div class="category-name">Web Dev</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">📊</div>
+                        <div class="category-name">Data Science</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="paths-section">
+                <div class="paths-grid">
+                    <!-- Python Mastery Path -->
+                    <div class="path-card" onclick="showPathDetails('python-mastery')">
+                        <div class="path-header">
+                            <div class="path-difficulty">Intermediate</div>
+                            🐍
+                        </div>
+                        <div class="path-content">
+                            <h3 class="path-title">Python Mastery</h3>
+                            <p class="path-desc">Elevate your Python skills with advanced concepts, libraries, and real-world applications.</p>
+                            <div class="path-meta">
+                                <span>23 challenges</span>
+                                <span>Est. time: 45 hours</span>
+                            </div>
+                            <div class="path-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 40%;"></div>
+                                </div>
+                                <div class="path-footer">
+                                    <div class="path-tags">
+                                        <span class="path-tag">Python</span>
+                                        <span class="path-tag">Backend</span>
+                                    </div>
+                                    <button class="continue-btn">Continue</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Structures in C++ Path -->
+                    <div class="path-card" onclick="showPathDetails('cpp-data-structures')">
+                        <div class="path-header">
+                            <div class="path-difficulty">Hard</div>
+                            ⚙
+                        </div>
+                        <div class="path-content">
+                            <h3 class="path-title">Data Structures in C++</h3>
+                            <p class="path-desc">Master essential data structures and algorithms using C++ for competitive programming.</p>
+                            <div class="path-meta">
+                                <span>35 challenges</span>
+                                <span>Est. time: 60 hours</span>
+                            </div>
+                            <div class="path-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 55%;"></div>
+                                </div>
+                                <div class="path-footer">
+                                    <div class="path-tags">
+                                        <span class="path-tag">C++</span>
+                                        <span class="path-tag">Algorithms</span>
+                                    </div>
+                                    <button class="continue-btn">Continue</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- JavaScript & React Path -->
+                    <div class="path-card" onclick="showPathDetails('js-react')">
+                        <div class="path-header">
+                            <div class="path-difficulty">Beginner</div>
+                            🌟
+                        </div>
+                        <div class="path-content">
+                            <h3 class="path-title">JavaScript & React</h3>
+                            <p class="path-desc">Learn modern JavaScript and React.js to build interactive web applications.</p>
+                            <div class="path-meta">
+                                <span>28 challenges</span>
+                                <span>Est. time: 50 hours</span>
+                            </div>
+                            <div class="path-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 20%;"></div>
+                                </div>
+                                <div class="path-footer">
+                                    <div class="path-tags">
+                                        <span class="path-tag">JavaScript</span>
+                                        <span class="path-tag">Frontend</span>
+                                    </div>
+                                    <button class="continue-btn">Continue</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Machine Learning Fundamentals -->
+                    <div class="path-card" onclick="showPathDetails('ml-fundamentals')">
+                        <div class="path-header">
+                            <div class="path-difficulty">Intermediate</div>
+                            🧠
+                        </div>
+                        <div class="path-content">
+                            <h3 class="path-title">Machine Learning Fundamentals</h3>
+                            <p class="path-desc">Build a strong foundation in ML concepts with Python and popular libraries.</p>
+                            <div class="path-meta">
+                                <span>30 challenges</span>
+                                <span>Est. time: 65 hours</span>
+                            </div>
+                            <div class="path-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 10%;"></div>
+                                </div>
+                                <div class="path-footer">
+                                    <div class="path-tags">
+                                        <span class="path-tag">Python</span>
+                                        <span class="path-tag">AI/ML</span>
+                                    </div>
+                                    <button class="continue-btn">Start</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Full Stack Web Development -->
+                    <div class="path-card" onclick="showPathDetails('fullstack-web')">
+                        <div class="path-header">
+                            <div class="path-difficulty">Intermediate</div>
+                            🌐
+                        </div>
+                        <div class="path-content">
+                            <h3 class="path-title">Full Stack Web Development</h3>
+                            <p class="path-desc">Become a full stack developer with Node.js, Express, MongoDB, and React.</p>
+                            <div class="path-meta">
+                                <span>40 challenges</span>
+                                <span>Est. time: 80 hours</span>
+                            </div>
+                            <div class="path-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+<div class="path-footer">
+    <div class="path-tags">
+        <span class="path-tag">JavaScript</span>
+        <span class="path-tag">Web</span>
+    </div>
+    <button class="continue-btn">Start</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Java Enterprise Development -->
+<div class="path-card" onclick="showPathDetails('java-enterprise')">
+<div class="path-header">
+<div class="path-difficulty">Advanced</div>
+☕
+</div>
+<div class="path-content">
+<h3 class="path-title">Java Enterprise Development</h3>
+<p class="path-desc">Master Java EE, Spring Framework, and microservices architecture.</p>
+<div class="path-meta">
+<span>32 challenges</span>
+<span>Est. time: 70 hours</span>
+</div>
+<div class="path-progress">
+<div class="progress-bar">
+    <div class="progress-fill" style="width: 0%;"></div>
+</div>
+<div class="path-footer">
+    <div class="path-tags">
+        <span class="path-tag">Java</span>
+        <span class="path-tag">Backend</span>
+    </div>
+    <button class="continue-btn">Start</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<!-- Path Details Modal Overlays -->
+<div id="python-mastery-details" class="path-details-overlay">
+<div class="path-details-modal">
+<button class="modal-close" onclick="closePathDetails('python-mastery')">✕</button>
+<div class="path-details-header">
+<div class="path-details-icon">🐍</div>
+<div class="path-details-title">
+<h2>Python Mastery</h2>
+<div class="path-details-meta">
+<span>Difficulty: Intermediate</span>
+<span>23 challenges</span>
+<span>Est. time: 45 hours</span>
+<span>Your progress: 40%</span>
+</div>
+</div>
+</div>
+
+<div class="path-overview">
+<h3 class="overview-title">Overview</h3>
+<p>Take your Python skills to the next level with this comprehensive learning path. Covering advanced Python concepts, popular libraries, and real-world applications, this path will prepare you for professional Python development. From data analysis to web development, you'll build expertise in Python's versatile ecosystem.</p>
+</div>
+
+<div class="path-modules">
+<h3 class="modules-title">Course Content</h3>
+
+<div class="module-item">
+<div class="module-header" onclick="toggleModule(this)">
+<div class="module-title">
+<span class="module-icon">📊</span>
+Module 1: Advanced Python Fundamentals
+</div>
+<div class="module-toggle">+</div>
+</div>
+<div class="module-content">
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">✓</div>
+Functional Programming in Python
+</div>
+<div class="topic-time">90 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">✓</div>
+Advanced Data Structures
+</div>
+<div class="topic-time">120 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">✓</div>
+Decorators and Context Managers
+</div>
+<div class="topic-time">90 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">▶</div>
+Iterators and Generators
+</div>
+<div class="topic-time">75 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Metaclasses and Class Decorators
+</div>
+<div class="topic-time">105 mins</div>
+</div>
+</div>
+</div>
+
+<div class="module-item">
+<div class="module-header" onclick="toggleModule(this)">
+<div class="module-title">
+<span class="module-icon">📈</span>
+Module 2: Data Analysis with Python
+</div>
+<div class="module-toggle">+</div>
+</div>
+<div class="module-content">
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+NumPy Fundamentals
+</div>
+<div class="topic-time">120 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Pandas for Data Manipulation
+</div>
+<div class="topic-time">150 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Data Visualization with Matplotlib
+</div>
+<div class="topic-time">120 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Advanced Visualization with Seaborn
+</div>
+<div class="topic-time">90 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Data Analysis Projects
+</div>
+<div class="topic-time">180 mins</div>
+</div>
+</div>
+</div>
+
+<div class="module-item">
+<div class="module-header" onclick="toggleModule(this)">
+<div class="module-title">
+<span class="module-icon">🌐</span>
+Module 3: Web Development with Python
+</div>
+<div class="module-toggle">+</div>
+</div>
+<div class="module-content">
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Introduction to Flask
+</div>
+<div class="topic-time">120 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Building RESTful APIs
+</div>
+<div class="topic-time">150 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Database Integration with SQLAlchemy
+</div>
+<div class="topic-time">135 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Authentication and Security
+</div>
+<div class="topic-time">120 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Deploying Python Web Applications
+</div>
+<div class="topic-time">90 mins</div>
+</div>
+</div>
+</div>
+
+<div class="module-item">
+<div class="module-header" onclick="toggleModule(this)">
+<div class="module-title">
+<span class="module-icon">🔧</span>
+Module 4: Automation and Testing
+</div>
+<div class="module-toggle">+</div>
+</div>
+<div class="module-content">
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Working with Files and OS
+</div>
+<div class="topic-time">90 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Web Scraping with Beautiful Soup
+</div>
+<div class="topic-time">120 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Unit Testing in Python
+</div>
+<div class="topic-time">105 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Continuous Integration
+</div>
+<div class="topic-time">90 mins</div>
+</div>
+</div>
+</div>
+
+<div class="module-item">
+<div class="module-header" onclick="toggleModule(this)">
+<div class="module-title">
+<span class="module-icon">🚀</span>
+Module 5: Final Project
+</div>
+<div class="module-toggle">+</div>
+</div>
+<div class="module-content">
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Project Planning and Setup
+</div>
+<div class="topic-time">60 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Building a Full-Stack Python Application
+</div>
+<div class="topic-time">240 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Testing and Debugging
+</div>
+<div class="topic-time">90 mins</div>
+</div>
+<div class="topic-item">
+<div class="topic-name">
+<div class="topic-icon">○</div>
+Deployment and Documentation
+</div>
+<div class="topic-time">120 mins</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="path-skills">
+<h3 class="skills-title">Skills You'll Gain</h3>
+<div class="skills-grid">
+<div class="skill-item">Python Advanced Features</div>
+<div class="skill-item">Data Analysis</div>
+<div class="skill-item">Web Development</div>
+<div class="skill-item">API Development</div>
+<div class="skill-item">Database Integration</div>
+<div class="skill-item">Testing & Debugging</div>
+<div class="skill-item">Automation</div>
+<div class="skill-item">Project Architecture</div>
+<div class="skill-item">Deployment</div>
+</div>
+</div>
+
+<div class="path-actions">
+<button class="action-btn secondary-btn">Add to Saved</button>
+<button class="action-btn primary-btn">Continue Learning</button>
+</div>
+</div>
+</div>
+
+<!-- Add similar modals for other paths as needed -->
+<div id="cpp-data-structures-details" class="path-details-overlay">
+<!-- Content for C++ Data Structures path details -->
+</div>
+
+<div id="js-react-details" class="path-details-overlay">
+<!-- Content for JavaScript & React path details -->
+</div>
+
+<div class="ai-assistant">🤖</div>
+
+<script>
+// Function to toggle module content visibility
+function toggleModule(element) {
+const content = element.nextElementSibling;
+content.classList.toggle('active');
+const toggle = element.querySelector('.module-toggle');
+toggle.textContent = content.classList.contains('active') ? '-' : '+';
+}
+
+// Function to show path details modal
+function showPathDetails(pathId) {
+const modal = document.getElementById(pathId + '-details');
+if (modal) {
+modal.classList.add('active');
+document.body.style.overflow = 'hidden';
+}
+}
+
+// Function to close path details modal
+function closePathDetails(pathId) {
+const modal = document.getElementById(pathId + '-details');
+if (modal) {
+modal.classList.remove('active');
+document.body.style.overflow = 'auto';
+}
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+const overlays = document.querySelectorAll('.path-details-overlay.active');
+overlays.forEach(overlay => {
+const modal = overlay.querySelector('.path-details-modal');
+if (event.target === overlay && !modal.contains(event.target)) {
+overlay.classList.remove('active');
+document.body.style.overflow = 'auto';
+}
+});
+});
+</script>
+</body>
+</html>

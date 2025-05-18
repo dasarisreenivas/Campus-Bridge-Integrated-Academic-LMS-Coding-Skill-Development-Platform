@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMaster - Programming Topics</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --warning-color: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .overview {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .overview h2 {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        
+        .overview p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        
+        .stat-box {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            min-width: 200px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #777;
+        }
+        
+        .progress-container {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        .progress-bar.easy {
+            background-color: var(--secondary-color);
+            width: 76%;
+        }
+        
+        .progress-bar.medium {
+            background-color: #f39c12;
+            width: 30%;
+        }
+        
+        .progress-bar.hard {
+            background-color: var(--warning-color);
+            width: 6%;
+        }
+        
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .topic-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .topic-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            position: relative;
+        }
+        
+        .topic-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 2rem;
+        }
+        
+        .topic-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .topic-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .topic-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .topic-content {
+            padding: 1.5rem;
+        }
+        
+        .problem-list {
+            list-style-type: none;
+        }
+        
+        .problem-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .problem-item:last-child {
+            border-bottom: none;
+        }
+        
+        .problem-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .difficulty {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: white;
+        }
+        
+        .easy {
+            background-color: var(--secondary-color);
+        }
+        
+        .medium {
+            background-color: #f39c12;
+        }
+        
+        .hard {
+            background-color: var(--warning-color);
+        }
+        
+        .view-more {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .view-more-btn {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            border: 1px solid #e0e0e0;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .view-more-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">CodeMaster</div>
+            <div class="tagline">Master programming one problem at a time</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="overview">
+            <h2>Your Learning Progress</h2>
+            <p>Track your journey through our structured problem sets. Master each topic systematically and build solid programming skills.</p>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value">163 / 455</div>
+                    <div class="stat-label">Total Problems Solved</div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 36%; background-color: var(--primary-color);"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-value">99 / 131</div>
+                    <div class="stat-label">Easy Problems</div>
+                    <div class="progress-container">
+                        <div class="progress-bar easy"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-value">56 / 187</div>
+                    <div class="stat-label">Medium Problems</div>
+                    <div class="progress-container">
+                        <div class="progress-bar medium"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-value">8 / 136</div>
+                    <div class="stat-label">Hard Problems</div>
+                    <div class="progress-container">
+                        <div class="progress-bar hard"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="topics-grid">
+            <!-- Arrays Topic -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <div class="topic-icon">📊</div>
+                    <h3 class="topic-title">Arrays & Sequences</h3>
+                    <div class="topic-stats">
+                        <div class="topic-stat">
+                            <span>40/40</span>
+                            <span>Completed</span>
+                        </div>
+                        <div class="topic-stat">
+                            <span>100%</span>
+                            <span>Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <ul class="problem-list">
+                        <li class="problem-item">
+                            <div class="problem-name">Two Sum</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Best Time to Buy and Sell Stock</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Product of Array Except Self</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Maximum Subarray</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Trapping Rain Water</div>
+                            <span class="difficulty hard">Hard</span>
+                        </li>
+                    </ul>
+                    <div class="view-more">
+                        <button class="view-more-btn">View All Problems</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Strings Topic -->
+            <div class="topic-card">
+                <div class="topic-header" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                    <div class="topic-icon">📝</div>
+                    <h3 class="topic-title">Strings</h3>
+                    <div class="topic-stats">
+                        <div class="topic-stat">
+                            <span>6/15</span>
+                            <span>Completed</span>
+                        </div>
+                        <div class="topic-stat">
+                            <span>40%</span>
+                            <span>Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <ul class="problem-list">
+                        <li class="problem-item">
+                            <div class="problem-name">Valid Anagram</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Valid Palindrome</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Longest Substring Without Repeating Characters</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">String to Integer (atoi)</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Longest Palindromic Substring</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                    </ul>
+                    <div class="view-more">
+                        <button class="view-more-btn">View All Problems</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Linked Lists Topic -->
+            <div class="topic-card">
+                <div class="topic-header" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                    <div class="topic-icon">🔗</div>
+                    <h3 class="topic-title">Linked Lists</h3>
+                    <div class="topic-stats">
+                        <div class="topic-stat">
+                            <span>23/31</span>
+                            <span>Completed</span>
+                        </div>
+                        <div class="topic-stat">
+                            <span>74%</span>
+                            <span>Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <ul class="problem-list">
+                        <li class="problem-item">
+                            <div class="problem-name">Reverse Linked List</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Linked List Cycle</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Merge Two Sorted Lists</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Add Two Numbers</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">LRU Cache</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                    </ul>
+                    <div class="view-more">
+                        <button class="view-more-btn">View All Problems</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Binary Search Topic -->
+            <div class="topic-card">
+                <div class="topic-header" style="background: linear-gradient(135deg, #f39c12, #d35400);">
+                    <div class="topic-icon">🔍</div>
+                    <h3 class="topic-title">Binary Search</h3>
+                    <div class="topic-stats">
+                        <div class="topic-stat">
+                            <span>17/32</span>
+                            <span>Completed</span>
+                        </div>
+                        <div class="topic-stat">
+                            <span>53%</span>
+                            <span>Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <ul class="problem-list">
+                        <li class="problem-item">
+                            <div class="problem-name">Binary Search</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">First Bad Version</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Search in Rotated Sorted Array</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Find Minimum in Rotated Sorted Array</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Median of Two Sorted Arrays</div>
+                            <span class="difficulty hard">Hard</span>
+                        </li>
+                    </ul>
+                    <div class="view-more">
+                        <button class="view-more-btn">View All Problems</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Python Topic -->
+            <div class="topic-card">
+                <div class="topic-header" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
+                    <div class="topic-icon">🐍</div>
+                    <h3 class="topic-title">Python Mastery</h3>
+                    <div class="topic-stats">
+                        <div class="topic-stat">
+                            <span>28/31</span>
+                            <span>Completed</span>
+                        </div>
+                        <div class="topic-stat">
+                            <span>90%</span>
+                            <span>Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <ul class="problem-list">
+                        <li class="problem-item">
+                            <div class="problem-name">Fibonacci Sequence</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">List Comprehensions</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Dictionary Manipulation</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">File Processing</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Web Scraping</div>
+                            <span class="difficulty hard">Hard</span>
+                        </li>
+                    </ul>
+                    <div class="view-more">
+                        <button class="view-more-btn">View All Problems</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Web Development Topic -->
+            <div class="topic-card">
+                <div class="topic-header" style="background: linear-gradient(135deg, #1abc9c, #16a085);">
+                    <div class="topic-icon">🌐</div>
+                    <h3 class="topic-title">Web Technology</h3>
+                    <div class="topic-stats">
+                        <div class="topic-stat">
+                            <span>6/7</span>
+                            <span>Completed</span>
+                        </div>
+                        <div class="topic-stat">
+                            <span>86%</span>
+                            <span>Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <ul class="problem-list">
+                        <li class="problem-item">
+                            <div class="problem-name">Responsive Layout</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">CSS Animations</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Fetch API</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Form Validation</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">SPA Routing</div>
+                            <span class="difficulty hard">Hard</span>
+                        </li>
+                    </ul>
+                    <div class="view-more">
+                        <button class="view-more-btn">View All Problems</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- JavaScript Topic -->
+            <div class="topic-card">
+                <div class="topic-header" style="background: linear-gradient(135deg, #f1c40f, #f39c12);">
+                    <div class="topic-icon">🌟</div>
+                    <h3 class="topic-title">JavaScript & React</h3>
+                    <div class="topic-stats">
+                        <div class="topic-stat">
+                            <span>22/30</span>
+                            <span>Completed</span>
+                        </div>
+                        <div class="topic-stat">
+                            <span>73%</span>
+                            <span>Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <ul class="problem-list">
+                        <li class="problem-item">
+                            <div class="problem-name">Closures</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Promises</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">React Hooks</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">State Management</div>
+                            <span class="difficulty hard">Hard</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Custom Hooks</div>
+                            <span class="difficulty hard">Hard</span>
+                        </li>
+                    </ul>
+                    <div class="view-more">
+                        <button class="view-more-btn">View All Problems</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Database Topic -->
+            <div class="topic-card">
+                <div class="topic-header" style="background: linear-gradient(135deg, #34495e, #2c3e50);">
+                    <div class="topic-icon">💾</div>
+                    <h3 class="topic-title">Database Management Systems</h3>
+                    <div class="topic-stats">
+                        <div class="topic-stat">
+                            <span>19/25</span>
+                            <span>Completed</span>
+                        </div>
+                        <div class="topic-stat">
+                            <span>76%</span>
+                            <span>Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <ul class="problem-list">
+                        <li class="problem-item">
+                            <div class="problem-name">Basic SQL Queries</div>
+                            <span class="difficulty easy">Easy</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Joins and Subqueries</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Database Normalization</div>
+                            <span class="difficulty medium">Medium</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Transaction Management</div>
+                            <span class="difficulty hard">Hard</span>
+                        </li>
+                        <li class="problem-item">
+                            <div class="problem-name">Database Design</div>
+                            <span class="difficulty hard">Hard</span>
+                        </li>
+                    </ul>
+                    <div class="view-more">
+                        <button class="view-more-btn">View All Problems</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        // Simple interaction for the view more buttons
+        const viewMoreButtons = document.querySelectorAll('.view-more-btn');
+        viewMoreButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                alert('This would show all problems in this category in a real application.');
+            });
+        });
+    </script>
+</body>
+</html>

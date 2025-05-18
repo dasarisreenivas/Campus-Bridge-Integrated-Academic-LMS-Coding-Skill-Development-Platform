@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeRooms - Collaborative Coding</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: var(--light);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--dark);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .room-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .room-name {
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #334155;
+            border-radius: 4px;
+        }
+
+        .user-count {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        button.secondary {
+            background-color: var(--secondary);
+        }
+
+        button.success {
+            background-color: var(--success);
+        }
+
+        button.danger {
+            background-color: var(--danger);
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #1e293b;
+            border-right: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            padding: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .sidebar-header {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .user-list, .room-list {
+            list-style: none;
+        }
+
+        .user-item, .room-item {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success);
+        }
+
+        .user-name, .room-name-item {
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.7rem;
+            color: var(--secondary);
+            margin-left: auto;
+        }
+
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-right: 1px solid #334155;
+            font-size: 0.9rem;
+            color: var(--secondary);
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--light);
+            background-color: #0f172a;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .tab-close {
+            margin-left: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .tab-close:hover {
+            color: var(--danger);
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .editor-toolbar {
+            padding: 0.5rem;
+            background-color: #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .language-selector {
+            padding: 0.3rem 0.5rem;
+            background-color: #334155;
+            color: var(--light);
+            border: none;
+            border-radius: 4px;
+        }
+
+        .editor {
+            flex: 1;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            background-color: #0f172a;
+            resize: none;
+            color: var(--light);
+            border: none;
+            outline: none;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .chat-container {
+            height: 200px;
+            border-top: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .message {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .message-author {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--secondary);
+            margin-left: 0.5rem;
+        }
+
+        .message-content {
+            color: var(--light);
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 0.5rem;
+            border-top: 1px solid #334155;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            background-color: #1e293b;
+            color: var(--light);
+        }
+
+        .chat-input button {
+            margin-left: 0.5rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none;
+        }
+
+        .modal {
+            background-color: #1e293b;
+            border-radius: 8px;
+            padding: 1.5rem;
+            width: 400px;
+            max-width: 90vw;
+        }
+
+        .modal-header {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            background-color: #0f172a;
+            color: var(--light);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .show {
+            display: flex;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Code<span>Rooms</span></div>
+        <div class="room-info">
+            <div class="room-name">JS-Collaboration-101</div>
+            <div class="user-count"><span id="user-count">3</span> users online</div>
+        </div>
+        <div class="user-actions">
+            <button id="invite-btn">Invite</button>
+            <button id="share-btn" class="secondary">Share</button>
+            <button id="leave-btn" class="danger">Leave Room</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-header">Users (3)</div>
+                <ul class="user-list">
+                    <li class="user-item">
+                        <div class="user-status"></div>
+                        <div class="user-name">Sarah Johnson</div>
+                        <div class="user-role">Admin</div>
+                    </li>
+                    <li class="user-item">
+                        <div class="user-status"></div>
+                        <div class="user-name">You</div>
+                        <div class="user-role">Editor</div>
+                    </li>
+                    <li class="user-item">
+                        <div class="user-status"></div>
+                        <div class="user-name">Mike Peterson</div>
+                        <div class="user-role">Viewer</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-header">My Rooms</div>
+                <ul class="room-list">
+                    <li class="room-item">
+                        <div class="room-name-item">JS-Collaboration-101</div>
+                    </li>
+                    <li class="room-item">
+                        <div class="room-name-item">Python Study Group</div>
+                    </li>
+                    <li class="room-item">
+                        <div class="room-name-item">React Team Project</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <button id="create-room-btn" class="success" style="width: 100%;">Create New Room</button>
+            </div>
+        </div>
+
+        <div class="workspace">
+            <div class="tabs">
+                <div class="tab active">main.js <span class="tab-close">×</span></div>
+                <div class="tab">index.html <span class="tab-close">×</span></div>
+                <div class="tab">styles.css <span class="tab-close">×</span></div>
+                <div class="tab">+ New File</div>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-toolbar">
+                    <div class="editor-actions">
+                        <select class="language-selector">
+                            <option value="javascript">JavaScript</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="python">Python</option>
+                        </select>
+                        <button class="secondary">Run</button>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="secondary">Save</button>
+                        <button class="secondary">Download</button>
+                    </div>
+                </div>
+
+                <textarea class="editor" id="code-editor">// Welcome to CodeRooms!
+// This is a collaborative coding environment.
+// Start typing your code here...
+
+function greetUser(name) {
+  return `Hello, ${name}! Welcome to our coding room.`;
+}
+
+// Try changing this function and see the changes sync
+// with other users in real-time.
+
+console.log(greetUser("Developer"));
+
+// You can create additional files using the tabs above
+// and switch between different programming languages.
+
+// Happy coding!</textarea>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages">
+                    <div class="message">
+                        <span class="message-author">Sarah Johnson</span>
+                        <span class="message-time">2:45 PM</span>
+                        <div class="message-content">Hey everyone, I just created this room for our JavaScript project!</div>
+                    </div>
+                    <div class="message">
+                        <span class="message-author">Mike Peterson</span>
+                        <span class="message-time">2:47 PM</span>
+                        <div class="message-content">Great, I'll start working on the UI components.</div>
+                    </div>
+                    <div class="message">
+                        <span class="message-author">You</span>
+                        <span class="message-time">2:50 PM</span>
+                        <div class="message-content">I'll handle the data processing functions. Let me know if you need anything!</div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="Type a message...">
+                    <button>Send</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="create-room-modal">
+        <div class="modal">
+            <div class="modal-header">Create New Room</div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="room-name">Room Name</label>
+                    <input type="text" id="room-name" placeholder="Enter room name">
+                </div>
+                <div class="form-group">
+                    <label for="room-type">Room Type</label>
+                    <select id="room-type">
+                        <option value="public">Public</option>
+                        <option value="private">Private</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="room-language">Primary Language</label>
+                    <select id="room-language">
+                        <option value="javascript">JavaScript</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="csharp">C#</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-create-room" class="secondary">Cancel</button>
+                <button id="confirm-create-room" class="success">Create Room</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="invite-modal">
+        <div class="modal">
+            <div class="modal-header">Invite Users</div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="invite-email">Email Address</label>
+                    <input type="email" id="invite-email" placeholder="Enter email address">
+                </div>
+                <div class="form-group">
+                    <label for="invite-role">Role</label>
+                    <select id="invite-role">
+                        <option value="editor">Editor</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-invite" class="secondary">Cancel</button>
+                <button id="confirm-invite" class="success">Send Invitation</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const createRoomBtn = document.getElementById('create-room-btn');
+        const inviteBtn = document.getElementById('invite-btn');
+        const createRoomModal = document.getElementById('create-room-modal');
+        const inviteModal = document.getElementById('invite-modal');
+        const cancelCreateRoom = document.getElementById('cancel-create-room');
+        const confirmCreateRoom = document.getElementById('confirm-create-room');
+        const cancelInvite = document.getElementById('cancel-invite');
+        const confirmInvite = document.getElementById('confirm-invite');
+        const codeEditor = document.getElementById('code-editor');
+        const tabs = document.querySelectorAll('.tab');
+        const chatInput = document.querySelector('.chat-input input');
+        const chatSendBtn = document.querySelector('.chat-input button');
+        const chatMessages = document.querySelector('.chat-messages');
+        
+        // Mock data for demonstration
+        const userData = {
+            currentUser: {
+                id: 1,
+                name: 'You',
+                role: 'Editor'
+            },
+            users: [
+                {
+                    id: 2,
+                    name: 'Sarah Johnson',
+                    role: 'Admin',
+                    online: true
+                },
+                {
+                    id: 3,
+                    name: 'Mike Peterson',
+                    role: 'Viewer',
+                    online: true
+                }
+            ]
+        };
+        
+        const roomData = {
+            currentRoom: {
+                id: 1,
+                name: 'JS-Collaboration-101',
+                type: 'private',
+                language: 'javascript',
+                files: [
+                    {
+                        name: 'main.js',
+                        language: 'javascript',
+                        content: codeEditor.value
+                    },
+                    {
+                        name: 'index.html',
+                        language: 'html',
+                        content: '<!DOCTYPE html>\n<html>\n<head>\n  <title>Project</title>\n</head>\n<body>\n  <h1>Hello World</h1>\n</body>\n</html>'
+                    },
+                    {
+                        name: 'styles.css',
+                        language: 'css',
+                        content: 'body {\n  font-family: Arial, sans-serif;\n  background-color: #f0f0f0;\n}'
+                    }
+                ]
+            },
+            rooms: [
+                {
+                    id: 1,
+                    name: 'JS-Collaboration-101'
+                },
+                {
+                    id: 2,
+                    name: 'Python Study Group'
+                },
+                {
+                    id: 3,
+                    name: 'React Team Project'
+                }
+            ]
+        };
+        
+        // Mock messages
+        const messages = [
+            {
+                author: 'Sarah Johnson',
+                time: '2:45 PM',
+                content: 'Hey everyone, I just created this room for our JavaScript project!'
+            },
+            {
+                author: 'Mike Peterson',
+                time: '2:47 PM',
+                content: 'Great, I\'ll start working on the UI components.'
+            },
+            {
+                author: 'You',
+                time: '2:50 PM',
+                content: 'I\'ll handle the data processing functions. Let me know if you need anything!'
+            }
+        ];
+
+        // Event Listeners
+        createRoomBtn.addEventListener('click', () => {
+            createRoomModal.classList.add('show');
+        });
+
+        inviteBtn.addEventListener('click', () => {
+            inviteModal.classList.add('show');
+        });
+
+        cancelCreateRoom.addEventListener('click', () => {
+            createRoomModal.classList.remove('show');
+        });
+
+        confirmCreateRoom.addEventListener('click', () => {
+            const roomName = document.getElementById('room-name').value;
+            const roomType = document.getElementById('room-type').value;
+            const roomLanguage = document.getElementById('room-language').value;
+            
+            if (roomName) {
+                // In a real app, we would create the room on the server
+                alert(`Room "${roomName}" created successfully!`);
+                createRoomModal.classList.remove('show');
+                
+                // Add the new room to the list (for demo purposes)
+                const newRoom = {
+                    id: roomData.rooms.length + 1,
+                    name: roomName
+                };
+                
+                roomData.rooms.push(newRoom);
+                updateRoomList();
+            } else {
+                alert('Please enter a room name');
+            }
+        });
+
+        cancelInvite.addEventListener('click', () => {
+            inviteModal.classList.remove('show');
+        });
+
+        confirmInvite.addEventListener('click', () => {
+            const email = document.getElementById('invite-email').value;
+            const role = document.getElementById('invite-role').value;
+            
+            if (email) {
+                // In a real app, we would send the invitation via the server
+                alert(`Invitation sent to ${email} with role: ${role}`);
+                inviteModal.classList.remove('show');
+            } else {
+                alert('Please enter an email address');
+            }
+        });
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Set the active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update the editor content based on the selected file
+                const fileName = tab.textContent.trim().replace(' ×', '');
+                
+                if (fileName === '+ New File') {
+                    // Handle creating a new file
+                    const newFileName = prompt('Enter file name:');
+                    if (newFileName) {
+                        createNewFile(newFileName);
+                    }
+                } else {
+                    const file = roomData.currentRoom.files.find(f => f.name === fileName);
+                    if (file) {
+                        codeEditor.value = file.content;
+                        
+                        // Update language selector
+                        document.querySelector('.language-selector').value = file.language;
+                    }
+                }
+            });
+        });
+
+        // Handle tab close buttons
+        document.querySelectorAll('.tab-close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const tab = e.target.parentElement;
+                const fileName = tab.textContent.trim().replace(' ×', '');
+                
+                // In a real app, we would confirm before closing
+                if (confirm(`Are you sure you want to close ${fileName}?`)) {
+                    // Handle file closing logic
+                    // For demo, we'll just select another tab
+                    if (tab.classList.contains('active')) {
+                        // Find the next tab to activate
+                        const nextTab = tab.nextElementSibling || tab.previousElementSibling;
+                        if (nextTab) {
+                            nextTab.click();
+                        }
+                    }
+                    
+                    // In a real app, we might remove the file from storage
+                    // For demo, we'll keep the files in memory
+                }
+            });
+        });
+
+        chatSendBtn.addEventListener('click', sendChatMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+
+        // For demo: simulate real-time code changes
+        let typingTimeout;
+        codeEditor.addEventListener('input', () => {
+            // Update the file content in the mock data
+            const activeTab = document.querySelector('.tab.active');
+            const fileName = activeTab.textContent.trim().replace(' ×', '');
+            const file = roomData.currentRoom.files.find(f => f.name === fileName);
+            
+            if (file) {
+                file.content = codeEditor.value;
+            }
+            
+            // In a real app, we would send changes to the server
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                simulateUserTyping();
+            }, 2000);
+        });
+
+        // Functions
+        function updateRoomList() {
+            const roomList = document.querySelector('.room-list');
+            roomList.innerHTML = '';
+            
+            roomData.rooms.forEach(room => {
+                const li = document.createElement('li');
+                li.className = 'room-item';
+                
+                const roomNameDiv = document.createElement('div');
+                roomNameDiv.className = 'room-name-item';
+                roomNameDiv.textContent = room.name;
+                
+                li.appendChild(roomNameDiv);
+                roomList.appendChild(li);
+                
+                // Add click event to switch rooms
+                li.addEventListener('click', () => {
+                    // In a real app, we would load the room data from the server
+                    alert(`Switching to room: ${room.name}`);
+                    
+                    // Update the UI
+                    document.querySelector('.room-name').textContent = room.name;
+                });
+            });
+        }
+
+        function createNewFile(fileName) {
+            // Add the file to the mock data
+            const extension = fileName.split('.').pop();
+            let language = 'javascript'; // Default
+            
+            if (extension === 'html') language = 'html';
+            else if (extension === 'css') language = 'css';
+            else if (extension === 'py') language = 'python';
+            
+            const newFile = {
+                name: fileName,
+                language,
+                content: `// New file: ${fileName}\n\n`
+            };
+            
+            roomData.currentRoom.files.push(newFile);
+            
+            // Create the new tab
+            const tabsContainer = document.querySelector('.tabs');
+            const newFileTab = document.createElement('div');
+            newFileTab.className = 'tab';
+            
+            const tabText = document.createTextNode(fileName + ' ');
+            newFileTab.appendChild(tabText);
+            
+            const closeSpan = document.createElement('span');
+            closeSpan.className = 'tab-close';
+            closeSpan.textContent = '×';
+            newFileTab.appendChild(closeSpan);
+            
+            // Insert before the "+ New File" tab
+            tabsContainer.insertBefore(newFileTab, tabsContainer.lastElementChild);
+            
+            // Add event listeners to the new tab
+            newFileTab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                newFileTab.classList.add('active');
+                
+                codeEditor.value = newFile.content;
+                document.querySelector('.language-selector').value = newFile.language;
+            });
+            
+            closeSpan.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (confirm(`Are you sure you want to close ${fileName}?`)) {
+                    // Handle file closing logic
+                    if (newFileTab.classList.contains('active')) {
+                        // Find the next tab to activate
+                        const nextTab = newFileTab.nextElementSibling || newFileTab.previousElementSibling;
+                        if (nextTab) {
+                            nextTab.click();
+                        }
+                    }
+                    
+                    newFileTab.remove();
+                }
+            });
+            
+            // Select the new tab
+            newFileTab.click();
+        }
+
+        function sendChatMessage() {
+            const messageText = chatInput.value.trim();
+            
+            if (messageText) {
+                // Get current time
+                const now = new Date();
+                const hours = now.getHours() % 12 || 12;
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+                const timeString = `${hours}:${minutes} ${ampm}`;
+                
+                // Create message object
+                const message = {
+                    author: 'You',
+                    time: timeString,
+                    content: messageText
+                };
+                
+                // Add to messages array
+                messages.push(message);
+                
+                // Update UI
+                addMessageToChat(message);
+                
+                // Clear input
+                chatInput.value = '';
+                
+                // In a real app, we would send the message to the server
+                
+                // Simulate a response
+                setTimeout(() => {
+                    const responses = [
+                        "I like your approach. Let's continue with that.",
+                        "Good point! Have you considered using async/await here?",
+                        "I'm not sure about that implementation. Maybe we should refactor.",
+                        "That looks great! I'll integrate it with my part.",
+                        "Can you explain that a bit more? I'm not following."
+                    ];
+                    
+                    const responseIndex = Math.floor(Math.random() * responses.length);
+                    const responseAuthor = Math.random() > 0.5 ? 'Sarah Johnson' : 'Mike Peterson';
+                    
+                    const responseMessage = {
+                        author: responseAuthor,
+                        time: timeString,
+                        content: responses[responseIndex]
+                    };
+                    
+                    messages.push(responseMessage);
+                    addMessageToChat(responseMessage);
+                }, 2000);
+            }
+        }
+
+        function addMessageToChat(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            
+            const authorSpan = document.createElement('span');
+            authorSpan.className = 'message-author';
+            authorSpan.textContent = message.author;
+            
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'message-time';
+            timeSpan.textContent = message.time;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = message.content;
+            
+            messageDiv.appendChild(authorSpan);
+            messageDiv.appendChild(timeSpan);
+            messageDiv.appendChild(contentDiv);
+            
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function simulateUserTyping() {
+            // This simulates another user making changes to the code
+            // In a real app, this would come from the server
+            const simulatedChanges = [
+                {
+                    user: 'Sarah Johnson',
+                    change: "// Sarah added a new utility function\n\nfunction formatDate(date) {\n  return date.toLocaleDateString();\n}\n\n"
+                },
+                {
+                    user: 'Mike Peterson',
+                    change: "// Mike improved the error handling\n\ntry {\n  // Your code here\n} catch (error) {\n  console.error('An error occurred:', error);\n}\n\n"
+                }
+            ];
+            
+            const randomChange = simulatedChanges[Math.floor(Math.random()

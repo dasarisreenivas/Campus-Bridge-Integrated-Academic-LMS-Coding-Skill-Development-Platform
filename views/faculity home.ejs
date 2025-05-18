@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #3498db;
+        }
+        
+        .hero {
+            background-color: #3498db;
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features {
+            padding: 50px 0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .feature-card a {
+            display: inline-block;
+            margin-top: 15px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .feature-card a:hover {
+            text-decoration: underline;
+        }
+        
+        .announcements {
+            background-color: #ecf0f1;
+            padding: 50px 0;
+        }
+        
+        .announcement-list {
+            margin-top: 30px;
+        }
+        
+        .announcement-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .announcement-date {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .announcement-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .announcement-content {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+            text-align: left;
+            padding: 0 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: #3498db;
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+        
+        .login-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-section {
+                flex: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Faculty Portal</div>
+            <nav>
+                <ul>
+                    <li><a href="faculity home.html">Home</a></li>
+                    <li><a href="faculityattendence.html">Attendance</a></li>
+                    <li><a href="#assessments">Assessments</a></li>
+                    <li><a href="postcourses.html">Course Materials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            
+        </div>
+    </header>
+    
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Welcome to the Faculty Portal</h1>
+            <p>Your comprehensive platform for managing attendance, assessments, and course materials in one place.</p>
+        </div>
+    </section>
+    
+    <section class="features">
+        <div class="container">
+            <h2>Faculty Resources</h2>
+            <div class="features-grid">
+                <div class="feature-card" id="attendance">
+                    <div class="feature-icon">A</div>
+                    <h3>Attendance Management</h3>
+                    <p>Track student attendance, generate reports, and identify patterns to improve student engagement and performance.</p>
+                    <ul>
+                        <li>Record attendance with just a few clicks</li>
+                        <li>Generate attendance reports by date, course, or student</li>
+                        <li>Set attendance thresholds and receive alerts for at-risk students</li>
+                        <li>Export data for further analysis</li>
+                    </ul>
+                    <a href="#attendance-system">Access Attendance System →</a>
+                </div>
+                
+                <div class="feature-card" id="assessments">
+                    <div class="feature-icon">B</div>
+                    <h3>Assessment Tools</h3>
+                    <p>Create, administer, and grade assessments efficiently. Track student progress and provide timely feedback.</p>
+                    <ul>
+                        <li>Create quizzes, tests, and assignments</li>
+                        <li>Set up automated grading for objective questions</li>
+                        <li>Monitor assessment completion and submissions</li>
+                        <li>Analyze class performance and identify learning gaps</li>
+                    </ul>
+                    <a href="#assessment-center">Go to Assessment Center →</a>
+                </div>
+                
+                <div class="feature-card" id="courses">
+                    <div class="feature-icon">C</div>
+                    <h3>Course Materials</h3>
+                    <p>Organize and distribute course materials to students. Keep everything up-to-date and accessible.</p>
+                    <ul>
+                        <li>Upload lecture notes, slides, and reading materials</li>
+                        <li>Share videos and multimedia content</li>
+                        <li>Create a structured course syllabus</li>
+                        <li>Control access and visibility of materials</li>
+                    </ul>
+                    <a href="#course-repository">Browse Course Repository →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="announcements">
+        <div class="container">
+            <h2>Latest Announcements</h2>
+            <div class="announcement-list">
+                <div class="announcement-item">
+                    <div class="announcement-date">April 12, 2025</div>
+                    <h3 class="announcement-title">End of Semester Assessment Schedule Released</h3>
+                    <p class="announcement-content">The final assessment schedule for the Spring semester has been published. Please log in to view your assigned dates and times for exams and submission deadlines.</p>
+                </div>
+                
+                <div class="announcement-item">
+                    <div class="announcement-date">April 10, 2025</div>
+                    <h3 class="announcement-title">New Attendance Tracking System Update</h3>
+                    <p class="announcement-content">We've upgraded our attendance tracking system with new features including mobile check-in and automated absence notifications. Training sessions will be held next week.</p>
+                </div>
+                
+                <div class="announcement-item">
+                    <div class="announcement-date">April 8, 2025</div>
+                    <h3 class="announcement-title">Course Material Submission Reminder</h3>
+                    <p class="announcement-content">Faculty members are reminded to submit their updated course materials for the upcoming Summer semester by April 20th. Please use the course repository system for all uploads.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#attendance">Attendance System</a></li>
+                        <li><a href="#assessments">Assessment Center</a></li>
+                        <li><a href="#courses">Course Repository</a></li>
+                        <li><a href="#faculty-directory">Faculty Directory</a></li>
+                        <li><a href="#help">Help & Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#training">Training Materials</a></li>
+                        <li><a href="#guidelines">Faculty Guidelines</a></li>
+                        <li><a href="#policies">Academic Policies</a></li>
+                        <li><a href="#calendar">Academic Calendar</a></li>
+                        <li><a href="#forms">Forms & Documents</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section" id="contact">
+                    <h3>Contact Support</h3>
+                    <p>Email: support@facultyportal.edu</p>
+                    <p>Phone: (555) 123-4567</p>
+                    <p>Hours: Monday-Friday, 8:00 AM - 5:00 PM</p>
+                    <p>IT Helpdesk: Ext. 4357 (HELP)</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Faculty Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

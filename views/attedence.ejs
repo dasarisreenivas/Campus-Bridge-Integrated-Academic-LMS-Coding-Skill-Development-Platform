@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Attendance Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3498db;
+      --secondary: #2ecc71;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --text: #333;
+      --border-radius: 8px;
+      --shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
+      padding: 20px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 30px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .profile-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--dark);
+    }
+
+    .profile-info h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .profile-info p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .notification {
+      position: relative;
+      font-size: 24px;
+      color: var(--dark);
+      cursor: pointer;
+    }
+
+    .notification .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--danger);
+      color: white;
+      font-size: 12px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1, h2, h3 {
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 22px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+      margin-top: 40px;
+    }
+
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+      text-align: center;
+      transition: transform 0.3s ease;
+      border-top: 4px solid var(--primary);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card i {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .card p {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--dark);
+    }
+
+    .card:nth-child(2) { border-color: var(--secondary); }
+    .card:nth-child(2) i { color: var(--secondary); }
+    .card:nth-child(3) { border-color: var(--warning); }
+    .card:nth-child(3) i { color: var(--warning); }
+    .card:nth-child(4) { border-color: var(--danger); }
+    .card:nth-child(4) i { color: var(--danger); }
+
+    canvas {
+      width: 100% !important;
+      max-height: 350px;
+      margin: 20px 0;
+    }
+
+    .charts-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin: 30px 0;
+    }
+
+    .chart-card {
+      background: white;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    .form-section {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      margin-top: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--border-radius);
+      border: 1px solid #ddd;
+      font-family: inherit;
+      font-size: 15px;
+      transition: border 0.3s;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s;
+      display: inline-block;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #27ae60;
+      transform: translateY(-2px);
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .form-actions button {
+      margin: 0 5px;
+    }
+
+    .success {
+      text-align: center;
+      color: var(--secondary);
+      font-weight: bold;
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(46, 204, 113, 0.1);
+      border-radius: var(--border-radius);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      box-shadow: var(--shadow);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 15px;
+      border: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f0f0f0;
+    }
+
+    .badge-warning {
+      background-color: var(--warning);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .badge-danger {
+      background-color: var(--danger);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .badge-success {
+      background-color: var(--secondary);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      cursor: pointer;
+      margin-right: 5px;
+      border-radius: 6px 6px 0 0;
+      transition: all 0.3s;
+    }
+
+    .tab.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      color: #666;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .charts-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .summary-cards {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="profile">
+        <div class="profile-img">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+          <h3><%=username%></h3>
+          <p>ID: STU2024001</p>
+        </div>
+      </div>
+      <div class="notification">
+        <i class="fas fa-bell"></i>
+        <span class="badge">3</span>
+      </div>
+    </header>
+
+    <h1>Student Attendance Portal</h1>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="card">
+        <i class="fas fa-calendar-check"></i>
+        <h3>Overall Attendance</h3>
+        <p id="overallAttendance">80%</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-calendar-alt"></i>
+        <h3>Present Days</h3>
+        <p id="presentDays">240</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-calendar-times"></i>
+        <h3>Absent Days</h3>
+        <p id="absentDays">60</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Attendance Alert</h3>
+        <p id="attendanceAlert">Warning</p>
+      </div>
+    </div>
+
+    <!-- Attendance Charts -->
+    <div class="charts-container">
+      <div class="chart-card">
+        <h3>Subject-wise Attendance</h3>
+        <canvas id="attendanceChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Monthly Attendance Trend</h3>
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs">
+      <div class="tab active" data-tab="absences">Absences</div>
+      <div class="tab" data-tab="leave">Apply For Leave</div>
+      <div class="tab" data-tab="complaint">Raise Complaint</div>
+    </div>
+
+    <!-- Absences Content -->
+    <div class="tab-content active" id="absences-content">
+      <h2>Subject-wise Absences</h2>
+      <table id="absentTable">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Present</th>
+            <th>Total Classes</th>
+            <th>Absent Count</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <h2>Absence Details</h2>
+      <table id="absentDatesTable">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Absent Dates</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Leave Application Form -->
+    <div class="tab-content" id="leave-content">
+      <h2>Apply for Leave</h2>
+      <div class="form-section">
+        <form id="leaveForm">
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject" required>
+              <option value="">-- Select Subject --</option>
+              <option value="DSA">Data Structures & Algorithms</option>
+              <option value="Python">Python Programming</option>
+              <option value="Java">Java Programming</option>
+              <option value="Web Development">Web Development</option>
+              <option value="JavaScript">JavaScript</option>
+              <option value="React">React</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Leave Date</label>
+            <input type="date" id="date" required>
+          </div>
+
+          <div class="form-group">
+            <label for="reason">Reason for Leave</label>
+            <textarea id="reason" rows="4" required placeholder="Please provide detailed reason for your leave application"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="file">Supporting Document (optional)</label>
+            <input type="file" id="file">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit Leave Application</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+          </div>
+          <p class="success" id="successMsg">
+            <i class="fas fa-check-circle"></i> Leave application submitted successfully!
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Complaint Form -->
+    <div class="tab-content" id="complaint-content">
+      <h2>Raise Attendance Complaint</h2>
+      <div class="form-section">
+        <form id="complaintForm">
+          <div class="form-group">
+            <label for="complaintSubject">Subject</label>
+            <select id="complaintSubject" required>
+              <option value="">-- Select Subject --</option>
+              <option value="DSA">Data Structures & Algorithms</option>
+              <option value="Python">Python Programming</option>
+              <option value="Java">Java Programming</option>
+              <option value="Web Development">Web Development</option>
+              <option value="JavaScript">JavaScript</option>
+              <option value="React">React</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="complaintType">Type of Issue</label>
+            <select id="complaintType" required>
+              <option value="">-- Select Issue Type --</option>
+              <option value="Attendance Not Marked">Attendance Not Marked</option>
+              <option value="Marked Absent Incorrectly">Marked Absent Incorrectly</option>
+              <option value="System Error">System Error</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="complaintDate">Date of Issue</label>
+            <input type="date" id="complaintDate" required>
+          </div>
+
+          <div class="form-group">
+            <label for="complaintText">Complaint Details</label>
+            <textarea id="complaintText" rows="4" required placeholder="Please describe your complaint in detail"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="complaintFile">Supporting Evidence (optional)</label>
+            <input type="file" id="complaintFile">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit Complaint</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+          </div>
+          <p class="success" id="complaintSuccess">
+            <i class="fas fa-check-circle"></i> Complaint submitted successfully!
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 Student Attendance Portal | Campus Management System</p>
+    </footer>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Sample data
+    const attendanceData = {
+      "DSA": { present: 40, total: 50 },
+      "Python": { present: 45, total: 50 },
+      "Java": { present: 47, total: 50 },
+      "Web Development": { present: 38, total: 50 },
+      "JavaScript": { present: 42, total: 50 },
+      "React": { present: 44, total: 50 }
+    };
+
+    const absentDates = {
+      "DSA": ["2024-03-01", "2024-03-08", "2024-03-15", "2024-03-22", "2024-03-29"],
+      "Python": ["2024-03-03", "2024-03-17", "2024-03-31"],
+      "Java": ["2024-03-10", "2024-03-24"],
+      "Web Development": ["2024-03-05", "2024-03-12", "2024-03-19", "2024-03-26"],
+      "JavaScript": ["2024-03-04", "2024-03-18", "2024-04-01"],
+      "React": ["2024-03-06", "2024-03-13", "2024-03-20", "2024-04-03"]
+    };
+
+    const monthlyData = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+      datasets: [
+        {
+          label: 'Monthly Attendance %',
+          data: [95, 88, 78, 82, 80],
+          borderColor: '#3498db',
+          tension: 0.4,
+          fill: false
+        }
+      ]
+    };
+
+    // Update summary cards
+    function updateSummaryCards() {
+      let totalPresent = 0;
+      let totalClasses = 0;
+      
+      for (let subject in attendanceData) {
+        totalPresent += attendanceData[subject].present;
+        totalClasses += attendanceData[subject].total;
+      }
+      
+      const percentage = ((totalPresent / totalClasses) * 100).toFixed(1);
+      const absentDays = totalClasses - totalPresent;
+      
+      document.getElementById("overallAttendance").textContent = percentage + "%";
+      document.getElementById("presentDays").textContent = totalPresent;
+      document.getElementById("absentDays").textContent = absentDays;
+      
+      // Set attendance alert status
+      const alertElement = document.getElementById("attendanceAlert");
+      if (percentage >= 85) {
+        alertElement.textContent = "Good";
+        alertElement.style.color = "#2ecc71";
+      } else if (percentage >= 75) {
+        alertElement.textContent = "Warning";
+        alertElement.style.color = "#f39c12";
+      } else {
+        alertElement.textContent = "Critical";
+        alertElement.style.color = "#e74c3c";
+      }
+    }
+
+    // Initialize attendance chart
+    const attendanceCtx = document.getElementById("attendanceChart").getContext("2d");
+    const attendanceChart = new Chart(attendanceCtx, {
+      type: 'bar',
+      data: {
+        labels: Object.keys(attendanceData),
+        datasets: [{
+          label: 'Attendance %',
+          data: Object.values(attendanceData).map(d => ((d.present / d.total) * 100).toFixed(1)),
+          backgroundColor: [
+            'rgba(52, 152, 219, 0.7)',
+            'rgba(46, 204, 113, 0.7)',
+            'rgba(155, 89, 182, 0.7)',
+            'rgba(52, 73, 94, 0.7)',
+            'rgba(241, 196, 15, 0.7)',
+            'rgba(230, 126, 34, 0.7)'
+          ],
+          borderColor: [
+            'rgb(52, 152, 219)',
+            'rgb(46, 204, 113)',
+            'rgb(155, 89, 182)',
+            'rgb(52, 73, 94)',
+            'rgb(241, 196, 15)',
+            'rgb(230, 126, 34)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `Attendance: ${context.raw}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Percentage'
+            }
+          }
+        }
+      }
+    });
+
+    // Initialize trend chart
+    const trendCtx = document.getElementById("trendChart").getContext("2d");
+    const trendChart = new Chart(trendCtx, {
+      type: 'line',
+      data: monthlyData,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Percentage'
+            }
+          }
+        }
+      }
+    });
+
+    // Update absent table
+    function updateAbsents() {
+      const tbody = document.querySelector("#absentTable tbody");
+      tbody.innerHTML = "";
+
+      for (let subject in attendanceData) {
+        const present = attendanceData[subject].present;
+        const total = attendanceData[subject].total;
+        const absent = total - present;
+        const percentage = ((present / total) * 100).toFixed(1);
+        
+        let status = '';
+        if (percentage >= 85) {
+          status = '<span class="badge-success">Good</span>';
+        } else if (percentage >= 75) {
+          status = '<span class="badge-warning">Warning</span>';
+        } else {
+          status = '<span class="badge-danger">Critical</span>';
+        }
+        
+        const row = `
+          <tr>
+            <td>${subject}</td>
+            <td>${present}</td>
+            <td>${total}</td>
+            <td>${absent}</td>
+            <td>${status}</td>
+          </tr>
+        `;
+        tbody.insertAdjacentHTML("beforeend", row);
+      }
+    }
+
+    // Update absent dates table
+    function updateAbsentDates() {
+      const tbody = document.querySelector("#absentDatesTable tbody");
+      tbody.innerHTML = "";
+
+      for (let subject in absentDates) {
+        const dates = absentDates[subject].join(", ") || "None";
+        const row = `
+          <tr>
+            <td>${subject}</td>
+            <td>${dates}</td>
+            <td>
+              ${absentDates[subject].length > 0 ? 
+              '<button class="btn btn-primary" onclick="raiseComplaint(\'' + subject + '\')">Raise Complaint</button>' : 
+              ''}
+            </td>
+          </tr>
+        `;
+        tbody.insertAdjacentHTML("beforeend", row);
+      }
+    }
+
+    // Tab functionality
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and contents
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Show corresponding content
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(`${tabId}-content`).classList.add('active');
+      });
+    });
+
+    // Leave form submission
+    document.getElementById("leaveForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const subject = document.getElementById("subject").value;
+      const date = document.getElementById("date").value;
+      const reason = document.getElementById("reason").value;
+
+      if (subject && date && reason) {
+        // Add the date to absent dates if not already included
+        if (!absentDates[subject].includes(date)) {
+          absentDates[subject].push(date);
+          
+          // Update attendance data
+          if (attendanceData[subject].present > 0) {
+            attendanceData[subject].present--;
+          }
+          
+          // Re-render all data
+          updateAbsentDates();
+          updateAbsents();
+          updateSummaryCards();
+          
+          // Update charts
+          attendanceChart.data.datasets[0].data = Object.values(attendanceData)
+            .map(d => ((d.present / d.total) * 100).toFixed(1));
+          attendanceChart.update();
+        }
+      }
+
+      this.reset();
+      document.getElementById("successMsg").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("successMsg").style.display = "none";
+      }, 3000);
+    });
+
+    // Complaint form submission
+    document.getElementById("complaintForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const subject = document.getElementById("complaintSubject").value;
+      const issueType = document.getElementById("complaintType").value;
+      const date = document.getElementById("complaintDate").value;
+      const complaint = document.getElementById("complaintText").value;
+
+      console.log("Complaint raised:", { subject, issueType, date, complaint });
+
+      this.reset();
+      document.getElementById("complaintSuccess").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("complaintSuccess").style.display = "none";
+      }, 3000);
+    });
+
+    // Function to automatically fill complaint form when "Raise Complaint" is clicked
+    function raiseComplaint(subject) {
+      // Switch to complaint tab
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      document.querySelector('.tab[data-tab="complaint"]').classList.add('active');
+      document.getElementById('complaint-content').classList.add('active');
+      
+      // Fill the form
+      document.getElementById('complaintSubject').value = subject;
+      document.getElementById('complaintType').value = 'Marked Absent Incorrectly';
+      
+      // Focus on the date field
+      document.getElementById('complaintDate').focus();
+    }
+
+    // Initialize
+    updateSummaryCards();
+    updateAbsents();
+    updateAbsentDates();
+  </script>
+</body>
+</html>

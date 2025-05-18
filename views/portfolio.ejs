@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Builder</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --text-color: #333;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f8ff;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+        }
+        
+        .nav-link:hover {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+        
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .hero {
+            background-color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .feature-description {
+            color: #666;
+        }
+        
+        .templates {
+            margin-bottom: 60px;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--dark-color);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .template-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+        
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .template-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .template-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .template-card:hover .template-image img {
+            transform: scale(1.05);
+        }
+        
+        .template-info {
+            padding: 20px;
+        }
+        
+        .template-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .template-description {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .template-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .template-tag {
+            background-color: #f1f5ff;
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .cta {
+            background-color: var(--primary-color);
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 60px;
+        }
+        
+        .cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .btn-cta {
+            background-color: white;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            padding: 12px 30px;
+        }
+        
+        .btn-cta:hover {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+        
+        .testimonials {
+            margin-bottom: 60px;
+        }
+        
+        .testimonials-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .testimonial {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .testimonial::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 4rem;
+            font-family: Georgia, serif;
+            color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 20px;
+            padding-left: 40px;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .testimonial-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .testimonial-position {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .pricing {
+            margin-bottom: 60px;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .pricing-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .popular-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .pricing-header {
+            padding: 30px;
+            background-color: #f8f9fa;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .pricing-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .pricing-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #666;
+        }
+        
+        .pricing-description {
+            color: #666;
+        }
+        
+        .pricing-features {
+            padding: 30px;
+            list-style: none;
+        }
+        
+        .pricing-feature {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .pricing-feature::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: 700;
+        }
+        
+        .pricing-footer {
+            padding: 0 30px 30px;
+            text-align: center;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+        
+        .social-link:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Builder page styles */
+        .dashboard {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .sidebar {
+            width: 300px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            height: fit-content;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f1f5ff;
+            color: var(--primary-color);
+        }
+        
+        .sidebar-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .content-area {
+            flex: 1;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .portfolio-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .portfolio-item {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .portfolio-item-image {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .portfolio-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .portfolio-item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .portfolio-item:hover .portfolio-item-overlay {
+            opacity: 1;
+        }
+        
+        .portfolio-item-info {
+            padding: 15px;
+        }
+        
+        .portfolio-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .portfolio-item-category {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .preview-container {
+            margin-top: 30px;
+            border: 1px dashed #ddd;
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+        
+        .color-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .color-option:hover, .color-option.active {
+            transform: scale(1.2);
+            border-color: var(--dark-color);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .upload-container {
+            border: 2px dashed #ddd;
+            padding: 40px;
+            text-align: center;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .upload-container:hover {
+            border-color: var(--primary-color);
+            background-color: #f1f5ff;
+        }
+        
+        .upload-icon {
+            font-size: 2rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .templates-grid, .pricing-grid, .features {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .portfolio-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .testimonial-author {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">PortfolioMaker</a>
+                <nav class="nav-menu">
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#templates" class="nav-link">Templates</a>
+                    <a href="#pricing" class="nav-link">Pricing</a>
+                    <a href="#testimonials" class="nav-link">Testimonials</a>
+                    <a href="builder.html" class="nav-link active">Builder</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Dashboard Section -->
+        <div class="dashboard">
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="sidebar-link active">General Info</a></li>
+                    <li><a href="#" class="sidebar-link">Projects</a></li>
+                    <li><a href="#" class="sidebar-link">Skills</a></li>
+                    <li><a href="#" class="sidebar-link">Experience</a></li>
+                    <li><a href="#" class="sidebar-link">Education</a></li>
+                    <li><a href="#" class="sidebar-link">Customize</a></li>
+                    <li><a href="#" class="sidebar-link">Publish</a></li>
+                </ul>
+            </div>
+            
+            <div class="content-area">
+                <h2>General Information</h2>
+                <p>Complete your basic profile information to get started with your portfolio.</p>
+                
+                <form id="generalInfoForm">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="professionalTitle">Professional Title</label>
+                        <input type="text" id="professionalTitle" name="professionalTitle" placeholder="e.g. Web Developer, Graphic Designer">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="location" placeholder="e.g. New York, NY">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bio">Bio / About Me</label>
+                        <textarea id="bio" name="bio" placeholder="Write a brief description about yourself"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profileImage">Profile Image</label>
+                        <div class="upload-container" id="profileImageUpload">
+                            <div class="upload-icon">📷</div>
+                            <p>Click to upload or drag and drop</p>
+                            <p>Supports: JPG, PNG, GIF (Max: 5MB)</p>
+                            <input type="file" id="profileImage" class="file-input" accept="image/*">
+                        </div>
+                        <div id="profileImagePreview" style="display: none; margin-top: 15px;">
+                            <img src="" alt="Profile Preview" style="max-width: 150px; max-height: 150px; border-radius: 50%;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Social Links</label>
+                        <div class="form-group">
+                            <input type="url" id="linkedinUrl" name="linkedinUrl" placeholder="LinkedIn URL">
+                        </div>
+                        <div class="form-group">
+                            <input type="url" id="githubUrl" name="githubUrl" placeholder="Github URL">
+                        </div>
+                        <div class="form-group">
+                            <input type="url" id="twitterUrl" name="twitterUrl" placeholder="Twitter URL">
+                        </div>
+                        <div class="form-group">
+                            <input type="url" id="websiteUrl" name="websiteUrl" placeholder="Personal Website URL">
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button type="button" id="previewBtn" class="btn btn-outline">Preview</button>
+                        <button type="submit" class="btn">Save & Continue</button>
+                    </div>
+                </form>
+                
+                <div class="preview-container" style="display: none;">
+                    <h3>Preview</h3>
+                    <div id="previewContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Section (Hidden initially) -->
+        <div id="projectsSection" style="display: none;">
+            <div class="content-area">
+                <h2>Projects</h2>
+                <p>Add your projects to showcase your work.</p>
+                
+                <button id="addProjectBtn" class="btn">Add New Project</button>
+                
+                <div class="portfolio-items" id="projectsList">
+                    <!-- Projects will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Section (Hidden initially) -->
+        <div id="skillsSection" style="display: none;">
+            <div class="content-area">
+                <h2>Skills</h2>
+                <p>Add your skills to showcase your expertise.</p>
+                
+                <div class="form-group">
+                    <label for="skillInput">Add Skill</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="skillInput" placeholder="Enter skill name">
+                        <button id="addSkillBtn" class="btn">Add</button>
+                    </div>
+                </div>
+                
+                <div id="skillsList" style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px;">
+                    <!-- Skills will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Project Modal -->
+        <div class="modal" id="projectModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add New Project</h3>
+                    <button class="modal-close" id="closeProjectModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="projectForm">
+                        <div class="form-group">
+                            <label for="projectTitle">Project Title</label>
+                            <input type="text" id="projectTitle" name="projectTitle" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="projectCategory">Category</label>
+                            <select id="projectCategory" name="projectCategory">
+                                <option value="Web Development">Web Development</option>
+                                <option value="Mobile App">Mobile App</option>
+                                <option value="UX/UI Design">UX/UI Design</option>
+                                <option value="Graphic Design">Graphic Design</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="projectDescription">Description</label>
+                            <textarea id="projectDescription" name="projectDescription" required></textarea
+                          

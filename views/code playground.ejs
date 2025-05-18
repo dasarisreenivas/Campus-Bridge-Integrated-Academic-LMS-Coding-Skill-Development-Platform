@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-Language Code Editor</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 50px auto;
+      background-color: #1f2937;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+    h2 {
+      text-align: center;
+      color: #60a5fa;
+    }
+    select, button {
+      padding: 10px;
+      margin: 10px 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+    }
+    select {
+      background-color: #374151;
+      color: #fff;
+    }
+    button {
+      background-color: #3b82f6;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    textarea {
+      width: 100%;
+      height: 300px;
+      background: #111827;
+      color: #f9fafb;
+      border: 1px solid #4b5563;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 16px;
+      resize: vertical;
+      margin-top: 10px;
+    }
+    iframe {
+      width: 100%;
+      height: 300px;
+      background: #fff;
+      border: none;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Multi-Language Code Editor</h2>
+    <select id="language" onchange="setHelloWorld()">
+      <option value="html">HTML/CSS/JS</option>
+      <option value="java">Java</option>
+      <option value="c">C</option>
+      <option value="python">Python</option>
+    </select>
+    <button onclick="runCode()">Run</button>
+    <textarea id="code" placeholder="Write your code here..."></textarea>
+    <iframe id="output"></iframe>
+  </div>
+
+  <script>
+    const helloWorldSnippets = {
+      html: `<!DOCTYPE html>
+<html>
+<head>
+  <title>Hello World</title>
+</head>
+<body>
+  <h1>Hello, World!</h1>
+</body>
+</html>`,
+      java: `public class HelloWorld {
+  public static void main(String[] args) {
+    System.out.println("Hello, World!");
+  }
+}`,
+      c: `#include <stdio.h>
+
+int main() {
+  printf("Hello, World!\\n");
+  return 0;
+}`,
+      python: `print("Hello, World!")`
+    };
+
+    function setHelloWorld() {
+      const language = document.getElementById("language").value;
+      document.getElementById("code").value = helloWorldSnippets[language];
+    }
+
+    window.onload = setHelloWorld;
+
+    function runCode() {
+      const language = document.getElementById("language").value;
+      const code = document.getElementById("code").value;
+      const output = document.getElementById("output");
+
+      if (language === "html") {
+        output.srcdoc = code;
+      } else {
+        output.srcdoc = `
+          <html>
+            <body style="font-family:monospace; padding: 20px; color: #dc2626; background-color: #f3f4f6;">
+              <h3>Execution not supported for ${language.toUpperCase()}!</h3>
+              <p>This editor only supports live execution for HTML/CSS/JS in the browser.</p>
+              <p>To run ${language} code, integrate with a backend like <strong>Judge0</strong> or other compiler APIs.</p>
+            </body>
+          </html>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
